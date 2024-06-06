@@ -12,23 +12,6 @@ module.exports = {
   plugins: ['react-refresh', 'import'],
   rules: {
     'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
-    // '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-    // 'import/order': [
-    //   'error',
-    //   {
-    //     groups: [['builtin', 'external', 'internal']],
-    //     pathGroups: [
-    //       {
-    //         pattern: 'react',
-    //         group: 'external',
-    //         position: 'before',
-    //       },
-    //     ],
-    //     pathGroupsExcludedImportTypes: ['react'],
-    //     'newlines-between': 'always',
-    //     alphabetize: { order: 'asc', caseInsensitive: true },
-    //   },
-    // ],
     'import/order': [
       'error',
       {
