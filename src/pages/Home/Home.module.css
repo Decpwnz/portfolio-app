@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Roboto:wght@300;400&display=swap');
+
+.container {
+  max-width: 100%;
+  min-height: 100vh;
+  background-color: #1a1a1aaa;
+  color: white;
+  padding: 20px 200px;
+  display: flex;
+  flex-direction: column;
+  /* ... existing styles ... */
+  /* background-image: url('../../assets/background.jpg'); */
+  /* background-size: cover; */
+  /* background-position: right center; */
+  /* background-repeat: no-repeat; */
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+}
+
+.logo {
+  font-size: 34px;
+  font-weight: bold;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.nav ul {
+  list-style-type: none;
+  display: flex;
+  gap: 50px;
+}
+
+.nav a {
+  text-decoration: none;
+  color: white;
+  font-size: 20px;
+  font-family: 'Roboto', sans-serif;
+}
+
+.themeToggle {
+  /* Style for theme toggle button */
+}
+
+.main {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  max-width: 50%;
+}
+
+.main h1 {
+  font-family: 'Montserrat', sans-serif; /* Use 'Poppins', 'Montserrat' or 'Proxima Nova' if preferred */
+  font-weight: 700; /* Bold */
+  font-size: 48px; /* Adjust size as needed */
+  color: #ffffff; /* White color for text */
+  margin-bottom: 20px; /* Spacing below heading */
+}
+
+.main p {
+  font-family: 'Roboto', sans-serif; /* Could also use 'Open Sans' or 'Lato' */
+  font-weight: 700; /* Light weight */
+  font-size: 16px;
+  color: #cacaca; /* Light grey text */
+  line-height: 1.6; /* Improve readability */
+  margin-bottom: 30px; /* Spacing below paragraph */
+}
+
+.contactButton {
+  background-color: white;
+  color: black;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.socialIcons {
+  margin-top: 20px;
+  /* Add styles for social media icons */
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+}
