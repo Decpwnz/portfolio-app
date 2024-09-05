@@ -1,4 +1,4 @@
-import { FaLinkedin } from 'react-icons/fa'
+import { FaLinkedin, FaGithub } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 
 import styles from './Home.module.css'
@@ -21,12 +21,22 @@ function Home() {
             </li>
           </ul>
         </nav>
-        <div className={styles.themeToggle}>{/* TODO Github icon or theme toggle button here */}GH</div>
+        <div className={styles.socialIcons}>
+          <a
+            style={{ color: 'white' }}
+            href="https://github.com/Decpwnz/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <FaGithub size={24} />
+          </a>
+        </div>
       </header>
       <main className={styles.main}>
         <h1>Hey! I'm Marijuš</h1>
         <p>
-          Welcome to my portfolio website. Please explore the different sections to learn more about me and my work.
+          Welcome to my portfolio website. Please explore the different sections to learn more about
+          me and my work.
         </p>
         <div className={styles.contactContainer}>
           <button className={styles.contactButton}>Contact me</button>
