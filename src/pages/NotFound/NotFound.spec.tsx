@@ -5,26 +5,38 @@ import { describe, expect, it } from 'vitest'
 import NotFound from './index'
 
 describe('NotFound Component', () => {
-  it('renders the custom not found message', () => {
+  it('renders the 404 message', () => {
     render(
       <BrowserRouter>
         <NotFound />
       </BrowserRouter>
     )
 
-    expect(screen.getByText('YOOO THATS A CUSTOM NOT FOUND PAGE')).toBeInTheDocument()
-    expect(screen.getByText('404 - Page Not Found')).toBeInTheDocument()
-    expect(screen.getByText('Sorry, the page you are looking for does not exist.')).toBeInTheDocument()
+    expect(screen.getByText('404')).toBeInTheDocument()
+    expect(screen.getByText('Page Not Found')).toBeInTheDocument()
   })
 
-  it('renders navigation links', () => {
+  it('renders the error message', () => {
     render(
       <BrowserRouter>
         <NotFound />
       </BrowserRouter>
     )
 
-    const homeLink = screen.getByText('Go back to Home')
+    expect(
+      screen.getByText("Oops! The page you're looking for doesn't exist or has been moved.")
+    ).toBeInTheDocument()
+  })
+
+  it('renders the back to home link', () => {
+    render(
+      <BrowserRouter>
+        <NotFound />
+      </BrowserRouter>
+    )
+
+    const homeLink = screen.getByText('Back to Home')
+    expect(homeLink).toBeInTheDocument()
     expect(homeLink.getAttribute('href')).toBe('/')
   })
 })

@@ -89,7 +89,7 @@
 }
 
 .submitButton {
-  background-color: #1a1a1aaa;
+  background-color: chocolate;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -100,5 +100,5 @@
 }
 
 .submitButton:hover {
-  background-color: #d2691e;
+  background-color: #d2691eb9;
 }
