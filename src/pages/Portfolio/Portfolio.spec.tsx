@@ -12,17 +12,41 @@ describe('Portfolio Component', () => {
       </BrowserRouter>
     )
 
-    expect(screen.getByText('Portfolio')).toBeInTheDocument()
+    expect(screen.getByText('My Portfolio')).toBeInTheDocument()
   })
 
-  it('renders navigation links', () => {
+  it('renders project cards', () => {
     render(
       <BrowserRouter>
         <Portfolio />
       </BrowserRouter>
     )
 
-    const homeLink = screen.getByText('Go back to Home')
+    expect(screen.getByText('Project 1')).toBeInTheDocument()
+    expect(screen.getByText('Project 2')).toBeInTheDocument()
+  })
+
+  it('renders project technologies', () => {
+    render(
+      <BrowserRouter>
+        <Portfolio />
+      </BrowserRouter>
+    )
+
+    expect(screen.getByText('React')).toBeInTheDocument()
+    expect(screen.getByText('TypeScript')).toBeInTheDocument()
+    expect(screen.getByText('Vue')).toBeInTheDocument()
+  })
+
+  it('renders the back to home link', () => {
+    render(
+      <BrowserRouter>
+        <Portfolio />
+      </BrowserRouter>
+    )
+
+    const homeLink = screen.getByText('Back to Home')
+    expect(homeLink).toBeInTheDocument()
     expect(homeLink.getAttribute('href')).toBe('/')
   })
 })
