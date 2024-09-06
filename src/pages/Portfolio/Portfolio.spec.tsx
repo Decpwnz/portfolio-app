@@ -12,7 +12,7 @@ describe('Portfolio Component', () => {
       </BrowserRouter>
     )
 
-    expect(screen.getByText('My Portfolio')).toBeInTheDocument()
+    expect(screen.getByText('Portfolio')).toBeInTheDocument()
   })
 
   it('renders project cards', () => {
