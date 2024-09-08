@@ -34,8 +34,8 @@ describe('Portfolio Component', () => {
     )
 
     expect(screen.getByText('React')).toBeInTheDocument()
-    expect(screen.getByText('TypeScript')).toBeInTheDocument()
-    expect(screen.getByText('Vue')).toBeInTheDocument()
+    expect(screen.getByText('Node.js')).toBeInTheDocument()
+    expect(screen.getByText('MongoDB')).toBeInTheDocument()
   })
 
   it('renders the back to home link', () => {

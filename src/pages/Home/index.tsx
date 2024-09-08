@@ -1,9 +1,15 @@
 import { FaLinkedin, FaGithub } from 'react-icons/fa'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import styles from './Home.module.css'
 
 function Home() {
+  const navigate = useNavigate()
+
+  const handleContactClick = () => {
+    navigate('/contacts')
+  }
+
   return (
     <div className={styles.container}>
       <header className={styles.header}>
@@ -39,7 +45,9 @@ function Home() {
           me and my work.
         </p>
         <div className={styles.contactContainer}>
-          <button className={styles.contactButton}>Contact me</button>
+          <button className={styles.contactButton} onClick={handleContactClick}>
+            Contact me
+          </button>
           <div className={styles.socialIcons}>
             <a
               className={styles.iconLink}
