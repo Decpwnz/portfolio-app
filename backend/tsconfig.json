@@ -3,7 +3,7 @@
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,
-    "types": ["@types/babel__template"],
+    "types": ["@types/babel__template", "jest"],
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
