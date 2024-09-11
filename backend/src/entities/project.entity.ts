@@ -4,10 +4,10 @@ import { Document } from 'mongoose';
 @Schema()
 export class Project extends Document {
   @Prop({ required: true })
-  name: string;
+  title: string;
 
   @Prop({ required: true })
-  desription: string;
+  description: string;
 
   @Prop({ type: [String] })
   technologies: string[];
