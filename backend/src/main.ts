@@ -8,6 +8,7 @@ async function bootstrap() {
   // It uses NestJS's ValidationPipe to automatically validate
   // DTOs based on their class-validator decorators
   app.useGlobalPipes(new ValidationPipe());
+  app.enableCors();
   await app.listen(process.env.PORT || 3000);
   console.log(`Server is running on port ${process.env.PORT || 3000}`);
 }
