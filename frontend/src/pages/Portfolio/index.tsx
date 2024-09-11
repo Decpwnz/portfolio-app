@@ -5,35 +5,6 @@ import { Link } from 'react-router-dom'
 import styles from './Portfolio.module.css'
 import { api, Project } from '../../services/api'
 
-// You might want to define an interface for project data
-// interface Project {
-//   id: number
-//   title: string
-//   description: string
-//   technologies: string[]
-//   imageUrl: string
-//   projectUrl: string
-// }
-
-// const projects: Project[] = [
-//   {
-//     id: 1,
-//     title: 'Project 1',
-//     description: 'Crypto chart with live data.',
-//     technologies: ['React', 'Node.js', 'MongoDB'],
-//     imageUrl: 'src/assets/cryptochart.png',
-//     projectUrl: 'https://decpwnz.github.io/tindog/',
-//   },
-//   {
-//     id: 2,
-//     title: 'Project 2',
-//     description: 'Tinder for dogs.',
-//     technologies: ['HTML', 'CSS', 'JavaScript'],
-//     imageUrl: 'src/assets/tindog.png',
-//     projectUrl: 'https://decpwnz.github.io/tindog/',
-//   },
-// ]
-
 function Portfolio() {
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
