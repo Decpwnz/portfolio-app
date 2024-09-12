@@ -26,7 +26,7 @@ function Home() {
               <Link to="/contacts">Contacts</Link>
             </li>
             <li>
-              <Link to="/admin">Admin</Link>
+              <Link to="/login">Login</Link>
             </li>
           </ul>
         </nav>
