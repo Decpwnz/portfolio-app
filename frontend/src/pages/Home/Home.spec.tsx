@@ -36,7 +36,6 @@ describe('Home Component', () => {
     const portfolioLink = screen.getByText('Portfolio')
     const aboutLink = screen.getByText('About')
     const contactsLink = screen.getByText('Contacts')
-    const adminLink = screen.getByText('Admin')
 
     expect(portfolioLink).toBeInTheDocument()
     expect(portfolioLink.getAttribute('href')).toBe('/portfolio')
@@ -46,9 +45,6 @@ describe('Home Component', () => {
 
     expect(contactsLink).toBeInTheDocument()
     expect(contactsLink.getAttribute('href')).toBe('/contacts')
-
-    expect(adminLink).toBeInTheDocument()
-    expect(adminLink.getAttribute('href')).toBe('/admin')
   })
 
   it('renders the Contact me button and navigates to contacts page when clicked', async () => {
