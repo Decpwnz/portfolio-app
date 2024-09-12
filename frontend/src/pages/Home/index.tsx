@@ -25,6 +25,9 @@ function Home() {
             <li>
               <Link to="/contacts">Contacts</Link>
             </li>
+            <li>
+              <Link to="/admin">Admin</Link>
+            </li>
           </ul>
         </nav>
         <div className={styles.socialIcons}>
