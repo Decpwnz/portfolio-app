@@ -1,31 +1,31 @@
 import React, { useState } from 'react'
 
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
-import styles from './Login.module.css'
+import styles from './Register.module.css'
 import { api } from '../../services/api'
 
-function Login() {
+function Register() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
   const navigate = useNavigate()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      await api.login(username, password)
-      navigate('/admin')
-    } catch (err) {
-      setError('Invalid username or password')
+      await api.register(username, password)
+      toast.success('Registration successful. Please log in.')
+      navigate('/login')
+    } catch (error) {
+      console.error('Registration failed:', error)
     }
   }
 
   return (
     <div className={styles.container}>
       <form onSubmit={handleSubmit} className={styles.form}>
-        <h2>Login</h2>
-        {error && <p className={styles.error}>{error}</p>}
+        <h2>Register</h2>
         <input
           type="text"
           value={username}
@@ -40,13 +40,10 @@ function Login() {
           placeholder="Password"
           required
         />
-        <button type="submit">Login</button>
+        <button type="submit">Register</button>
       </form>
-      <p>
-        Don't have an account? <Link to="/register">Register here</Link>
-      </p>
     </div>
   )
 }
 
-export default Login
+export default Register

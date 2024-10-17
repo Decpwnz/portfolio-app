@@ -34,6 +34,12 @@ export interface Project {
   projectUrl?: string
 }
 
+export interface User {
+  id: string
+  username: string
+  role: string
+}
+
 export const api = {
   login: async (username: string, password: string): Promise<string> => {
     const response = await axiosInstance.post('/auth/login', { username, password })
@@ -68,5 +74,22 @@ export const api = {
 
   deleteProject: async (id: string): Promise<void> => {
     await axiosInstance.delete(`/projects/${id}`)
+  },
+
+  register: async (
+    username: string,
+    password: string
+  ): Promise<{ id: string; username: string }> => {
+    const response = await axiosInstance.post('/users/register', { username, password })
+    return response.data
+  },
+
+  getProfile: async (): Promise<User> => {
+    const response = await axiosInstance.get('/users/profile')
+    return response.data
+  },
+
+  updatePassword: async (newPassword: string): Promise<void> => {
+    await axiosInstance.patch('/users/password', { newPassword })
   },
 }

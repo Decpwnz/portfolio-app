@@ -15,6 +15,8 @@ import Home from './pages/Home/index.tsx'
 import Login from './pages/Login/index.tsx'
 import NotFound from './pages/NotFound/index.tsx'
 import Portfolio from './pages/Portfolio/index.tsx'
+import Profile from './pages/Profile/index.tsx'
+import Register from './pages/Register/index.tsx'
 import './index.css'
 
 const router = createBrowserRouter([
@@ -29,6 +31,8 @@ const router = createBrowserRouter([
       { path: 'portfolio', element: <Portfolio /> },
       { path: 'admin', element: <Admin /> },
       { path: 'login', element: <Login /> },
+      { path: 'register', element: <Register /> },
+      { path: 'profile', element: <Profile /> },
     ],
   },
 ])
