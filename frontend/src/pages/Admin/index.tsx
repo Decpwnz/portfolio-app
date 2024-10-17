@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 import styles from './Admin.module.css'
 import { api, Project } from '../../services/api'
@@ -25,8 +26,13 @@ function Admin() {
   }, [])
 
   const fetchProjects = async () => {
-    const fetchedProjects = await api.getProjects()
-    setProjects(fetchedProjects)
+    try {
+      const fetchedProjects = await api.getProjects()
+      setProjects(fetchedProjects)
+    } catch (error) {
+      // Error will be displayed by the interceptor
+      console.error('Failed to fetch projects:', error)
+    }
   }
 
   // This function handles changes in input fields for the new project form
@@ -91,13 +97,15 @@ function Admin() {
     e.preventDefault()
 
     // Send a request to the API to create a new project using the current newProject state
-    await api.createProject(newProject)
-
-    // Reset the newProject state to its initial empty values
-    setNewProject({ title: '', description: '', technologies: [], imageUrl: '', projectUrl: '' })
-
-    // Fetch the updated list of projects to reflect the newly added project
-    fetchProjects()
+    try {
+      await api.createProject(newProject)
+      setNewProject({ title: '', description: '', technologies: [], imageUrl: '', projectUrl: '' })
+      fetchProjects()
+      toast.success('Project created successfully')
+    } catch (error) {
+      // Error will be displayed by the interceptor
+      console.error('Failed to create project:', error)
+    }
   }
 
   // Explanation:
@@ -109,8 +117,14 @@ function Admin() {
   // 6. fetchProjects() is called to update the list of projects, including the newly created one.
 
   const handleDelete = async (id: string) => {
-    await api.deleteProject(id)
-    fetchProjects()
+    try {
+      await api.deleteProject(id)
+      fetchProjects()
+      toast.success('Project deleted successfully')
+    } catch (error) {
+      // Error will be displayed by the interceptor
+      console.error('Failed to delete project:', error)
+    }
   }
 
   return (

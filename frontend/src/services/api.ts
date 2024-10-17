@@ -1,4 +1,5 @@
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
+import { toast } from 'react-toastify'
 
 const API_URL = 'http://localhost:3000'
 
@@ -13,6 +14,16 @@ axiosInstance.interceptors.request.use((config) => {
   }
   return config
 })
+
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error: AxiosError) => {
+    const message =
+      (error.response?.data as { message?: string })?.message || 'An unexpected error occurred'
+    toast.error(message)
+    return Promise.reject(error)
+  }
+)
 
 export interface Project {
   _id: string
@@ -44,9 +55,9 @@ export const api = {
     const response = await axiosInstance.get(`/projects/${id}`)
     return response.data
   },
-
   createProject: async (project: Omit<Project, '_id'>): Promise<Project> => {
     const response = await axiosInstance.post('/projects', project)
+    toast.success('Project created successfully')
     return response.data
   },
 
