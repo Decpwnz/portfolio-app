@@ -31,7 +31,7 @@ export class UsersController {
     @Body() updatePasswordDto: UpdatePasswordDto,
   ) {
     await this.usersService.updatePassword(
-      user.id,
+      user.userId,
       updatePasswordDto.newPassword,
     );
     return { message: 'Password updated successfully' };

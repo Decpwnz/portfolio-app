@@ -43,6 +43,10 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
     user.password = await bcrypt.hash(newPassword, 10);
-    await user.save();
+    try {
+      await user.save();
+    } catch (error) {
+      throw error;
+    }
   }
 }
