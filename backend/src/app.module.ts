@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { ProjectsModule } from './projects/projects.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { ContactModule } from './contact/contact.module';
 import databaseConfig from './config/database.config';
 
 @Module({
@@ -24,6 +25,7 @@ import databaseConfig from './config/database.config';
     ProjectsModule,
     AuthModule,
     UsersModule,
+    ContactModule,
   ],
   controllers: [AppController],
   providers: [AppService],
