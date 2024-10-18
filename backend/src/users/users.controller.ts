@@ -1,4 +1,13 @@
-import { Controller, Post, Body, UseGuards, Get, Patch } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UseGuards,
+  Get,
+  Patch,
+  Delete,
+  Param,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -35,5 +44,21 @@ export class UsersController {
       updatePasswordDto.newPassword,
     );
     return { message: 'Password updated successfully' };
+  }
+
+  @Get()
+  @UseGuards(AuthGuard('jwt'))
+  async getAllUsers() {
+    return this.usersService.findAll();
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Delete('remove/:id')
+  async removeUser(@Param('id') id: string) {
+    const deletedUser = await this.usersService.remove(id);
+    return {
+      user: deletedUser,
+      message: `User sucessfully deleted`,
+    };
   }
 }
