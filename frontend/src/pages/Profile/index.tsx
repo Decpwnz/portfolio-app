@@ -62,6 +62,7 @@ function Profile() {
       <button onClick={handleLogout} className={styles.logoutButton}>
         Logout
       </button>
+      <button onClick={() => navigate('/')}>Go Back Home</button>
     </div>
   )
 }

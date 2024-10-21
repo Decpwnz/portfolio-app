@@ -15,7 +15,7 @@ function Login() {
     e.preventDefault()
     try {
       await api.login(username, password)
-      navigate('/admin')
+      navigate('/')
     } catch (err) {
       setError('Invalid username or password')
     }
