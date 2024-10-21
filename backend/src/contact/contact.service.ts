@@ -1,11 +1,23 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { CreateContactDto } from './dto/create-contact.dto';
+import { ContactSubmission } from './schemas/contact-submission.schema';
 
 @Injectable()
 export class ContactService {
+  constructor(
+    @InjectModel(ContactSubmission.name)
+    private contactSubmissionModel: Model<ContactSubmission>,
+  ) {}
+
   async submitContactForm(createContactDto: CreateContactDto) {
-    // TODO: Implement email sending logic
-    console.log('Form submission received:', createContactDto);
+    const newSubmission = new this.contactSubmissionModel(createContactDto);
+    await newSubmission.save();
     return { message: 'Form submitted successfully' };
+  }
+
+  async getAllSubmissions() {
+    return this.contactSubmissionModel.find().sort({ createdAt: -1 }).exec();
   }
 }
