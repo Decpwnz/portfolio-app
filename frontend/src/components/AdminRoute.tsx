@@ -4,11 +4,7 @@ import { Navigate } from 'react-router-dom'
 
 import { useAppSelector } from '../app/hooks'
 
-interface AdminRouteProps {
-  children: React.ReactElement
-}
-
-const AdminRoute: React.FC<AdminRouteProps> = ({ children }) => {
+function AdminRoute({ children }: { children: React.ReactElement }) {
   const { isAuthenticated, user } = useAppSelector((state) => state.auth)
 
   if (!isAuthenticated || user?.role !== 'admin') {
