@@ -16,7 +16,6 @@ import {
   deleteProject,
 } from '../../features/projects/projectsSlice'
 import { Project } from '../../services/api'
-// import { Project, ContactSubmission } from '../../services/api'
 
 function Admin() {
   const dispatch = useAppDispatch()

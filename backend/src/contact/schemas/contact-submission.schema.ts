@@ -14,9 +14,6 @@ export class ContactSubmission extends Document {
 
   @Prop({ default: false })
   isRead: boolean;
-
-  @Prop({ default: Date.now })
-  createdAt: Date;
 }
 
 export const ContactSubmissionSchema =
