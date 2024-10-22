@@ -40,6 +40,12 @@ export interface User {
   role: string
 }
 
+export interface ContactFormData {
+  name: string
+  email: string
+  message: string
+}
+
 export const api = {
   login: async (username: string, password: string): Promise<string> => {
     const response = await axiosInstance.post('/auth/login', { username, password })
@@ -91,5 +97,10 @@ export const api = {
 
   updatePassword: async (newPassword: string): Promise<void> => {
     await axiosInstance.patch('/users/password', { newPassword })
+  },
+
+  submitContactForm: async (formData: ContactFormData): Promise<void> => {
+    const response = await axiosInstance.post('/contact', formData)
+    return response.data
   },
 }

@@ -1,80 +1,69 @@
-import React, { useState } from 'react'
-
-import axios from 'axios'
+import React, { useState, useEffect } from 'react'
 
 import styles from './ContactForm.module.css'
+import { useAppDispatch, useAppSelector } from '../../app/hooks'
+import { submitContactForm, resetContactForm } from '../../features/contact/contactSlice'
 
-const ContactForm: React.FC = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: '',
-  })
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitMessage, setSubmitMessage] = useState('')
+function ContactForm() {
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [message, setMessage] = useState('')
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }))
+  const dispatch = useAppDispatch()
+  const { loading, error, success } = useAppSelector((state) => state.contact)
+
+  useEffect(() => {
+    return () => {
+      dispatch(resetContactForm())
+    }
+  }, [dispatch])
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    dispatch(submitContactForm({ name, email, message }))
   }
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-    setSubmitMessage('')
-
-    try {
-      const response = await axios.post('http://localhost:3000/contact', formData)
-      setSubmitMessage(response.data.message)
-      setFormData({ name: '', email: '', message: '' })
-    } catch (error) {
-      setSubmitMessage('Failed to submit the form. Please try again.')
-    } finally {
-      setIsSubmitting(false)
-    }
+  if (success) {
+    return (
+      <p className={styles.successMessage}>Thank you for your message. We'll be in touch soon!</p>
+    )
   }
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className={styles.form}>
+      {error && <p className={styles.errorMessage}>{error}</p>}
       <div className={styles.formGroup}>
-        <label htmlFor="name">Name:</label>
+        <label htmlFor="name">Name</label>
         <input
           type="text"
           id="name"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
           required
         />
       </div>
       <div className={styles.formGroup}>
-        <label htmlFor="email">Email:</label>
+        <label htmlFor="email">Email</label>
         <input
           type="email"
           id="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           required
         />
       </div>
       <div className={styles.formGroup}>
-        <label htmlFor="message">Message:</label>
+        <label htmlFor="message">Message</label>
         <textarea
           id="message"
-          name="message"
-          value={formData.message}
-          onChange={handleChange}
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
           required
         ></textarea>
       </div>
-      <button className={styles.submitButton} type="submit" disabled={isSubmitting}>
-        {isSubmitting ? 'Submitting...' : 'Submit'}
+      <button type="submit" className={styles.submitButton} disabled={loading}>
+        {loading ? 'Sending...' : 'Send Message'}
       </button>
-      {submitMessage && <p className={styles.submitMessage}>{submitMessage}</p>}
     </form>
   )
 }

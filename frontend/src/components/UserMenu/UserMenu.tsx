@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { logout } from '../../features/auth/authSlice'
 
-const UserMenu: React.FC = () => {
+function UserMenu() {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
