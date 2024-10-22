@@ -4,18 +4,15 @@ import { FaLinkedin, FaGithub, FaUser, FaCaretDown } from 'react-icons/fa'
 import { Link, useNavigate } from 'react-router-dom'
 
 import styles from './Home.module.css'
+import { useAppSelector } from '../../app/hooks'
+import UserMenu from '../../components/UserMenu/UserMenu'
 
 function Home() {
   const navigate = useNavigate()
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated)
+
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    // Check if user is logged in
-    const token = localStorage.getItem('token')
-    setIsLoggedIn(!!token)
-  }, [])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -32,14 +29,6 @@ function Home() {
 
   const handleContactClick = () => {
     navigate('/contacts')
-  }
-
-  const handleLogout = (e: React.MouseEvent) => {
-    e.preventDefault()
-    localStorage.removeItem('token')
-    setIsLoggedIn(false)
-    setIsMenuOpen(false)
-    navigate('/')
   }
 
   return (
@@ -66,20 +55,8 @@ function Home() {
           </div>
           {isMenuOpen && (
             <ul className={styles.dropdown}>
-              {isLoggedIn ? (
-                <>
-                  <li>
-                    <Link to="/profile">Profile</Link>
-                  </li>
-                  <li>
-                    <Link to="/admin">Control Panel</Link>
-                  </li>
-                  <li>
-                    <Link to="/" onClick={handleLogout}>
-                      Sign Out
-                    </Link>
-                  </li>
-                </>
+              {isAuthenticated ? (
+                <UserMenu />
               ) : (
                 <>
                   <li>
