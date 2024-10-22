@@ -49,3 +49,23 @@
   padding: 5px 10px;
   cursor: pointer;
 }
+
+.projectsSection,
+.submissionsSection {
+  margin-bottom: 40px;
+}
+
+.submissionList {
+  display: grid;
+  gap: 20px;
+}
+
+.submissionItem {
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.submissionItem button {
+  margin-right: 10px;
+}

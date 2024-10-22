@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 
 import authReducer from '../features/auth/authSlice'
 import contactReducer from '../features/contact/contactSlice'
+import contactSubmissionsReducer from '../features/contactSubmissions/contactSubmissionsSlice'
 import projectsReducer from '../features/projects/projectsSlice'
 
 export const store = configureStore({
@@ -9,6 +10,7 @@ export const store = configureStore({
     auth: authReducer,
     contact: contactReducer,
     projects: projectsReducer,
+    contactSubmissions: contactSubmissionsReducer,
   },
 })
 

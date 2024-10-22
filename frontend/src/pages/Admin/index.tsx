@@ -5,17 +5,32 @@ import { useNavigate } from 'react-router-dom'
 import styles from './Admin.module.css'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import {
+  fetchContactSubmissions,
+  markSubmissionAsRead,
+  deleteContactSubmission,
+} from '../../features/contactSubmissions/contactSubmissionsSlice'
+import {
   fetchProjects,
   createProject,
   updateProject,
   deleteProject,
 } from '../../features/projects/projectsSlice'
 import { Project } from '../../services/api'
+// import { Project, ContactSubmission } from '../../services/api'
 
 function Admin() {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const { projects, loading, error } = useAppSelector((state) => state.projects)
+  const {
+    projects,
+    loading: projectsLoading,
+    error: projectsError,
+  } = useAppSelector((state) => state.projects)
+  const {
+    submissions,
+    loading: submissionsLoading,
+    error: submissionsError,
+  } = useAppSelector((state) => state.contactSubmissions)
   const [newProject, setNewProject] = useState<Omit<Project, '_id'>>({
     title: '',
     description: '',
@@ -27,6 +42,7 @@ function Admin() {
 
   useEffect(() => {
     dispatch(fetchProjects())
+    dispatch(fetchContactSubmissions())
   }, [dispatch])
 
   const handleInputChange = (
@@ -84,8 +100,19 @@ function Admin() {
     setEditingProject(null)
   }
 
-  if (loading) return <div>Loading...</div>
-  if (error) return <div>Error: {error}</div>
+  const handleMarkAsRead = (id: string) => {
+    dispatch(markSubmissionAsRead(id))
+  }
+
+  const handleDeleteSubmission = (id: string) => {
+    if (window.confirm('Are you sure you want to delete this submission?')) {
+      dispatch(deleteContactSubmission(id))
+    }
+  }
+
+  if (projectsLoading || submissionsLoading) return <div>Loading...</div>
+  if (projectsError || submissionsError)
+    return <div>Error: {projectsError || submissionsError}</div>
 
   return (
     <div className={styles.container}>
@@ -150,6 +177,22 @@ function Admin() {
             <p>Technologies: {project.technologies.join(', ')}</p>
             <button onClick={() => handleEdit(project)}>Edit</button>
             <button onClick={() => handleDelete(project._id)}>Delete</button>
+          </div>
+        ))}
+      </div>
+      <h2>Contact Submissions</h2>
+      <div className={styles.submissionList}>
+        {submissions.map((submission) => (
+          <div key={submission._id} className={styles.submissionItem}>
+            <h3>{submission.name}</h3>
+            <p>Email: {submission.email}</p>
+            <p>Message: {submission.message}</p>
+            <p>Date: {new Date(submission.createdAt).toLocaleString()}</p>
+            <p>Status: {submission.isRead ? 'Read' : 'Unread'}</p>
+            <button onClick={() => handleMarkAsRead(submission._id)} disabled={submission.isRead}>
+              Mark as Read
+            </button>
+            <button onClick={() => handleDeleteSubmission(submission._id)}>Delete</button>
           </div>
         ))}
       </div>

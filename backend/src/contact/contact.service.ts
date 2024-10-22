@@ -20,4 +20,14 @@ export class ContactService {
   async getAllSubmissions() {
     return this.contactSubmissionModel.find().sort({ createdAt: -1 }).exec();
   }
+
+  async markAsRead(id: string): Promise<ContactSubmission> {
+    return this.contactSubmissionModel
+      .findByIdAndUpdate(id, { isRead: true }, { new: true })
+      .exec();
+  }
+
+  async remove(id: string): Promise<ContactSubmission> {
+    return this.contactSubmissionModel.findByIdAndDelete(id).exec();
+  }
 }

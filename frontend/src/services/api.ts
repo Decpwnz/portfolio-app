@@ -46,6 +46,15 @@ export interface ContactFormData {
   message: string
 }
 
+export interface ContactSubmission {
+  _id: string
+  name: string
+  email: string
+  message: string
+  createdAt: string
+  isRead: boolean
+}
+
 export const api = {
   login: async (username: string, password: string): Promise<{ token: string; user: User }> => {
     const response = await axiosInstance.post('/auth/login', { username, password })
@@ -102,5 +111,19 @@ export const api = {
   submitContactForm: async (formData: ContactFormData): Promise<void> => {
     const response = await axiosInstance.post('/contact', formData)
     return response.data
+  },
+
+  getContactSubmissions: async (): Promise<ContactSubmission[]> => {
+    const response = await axiosInstance.get('/contact')
+    return response.data
+  },
+
+  markContactSubmissionAsRead: async (id: string): Promise<ContactSubmission> => {
+    const response = await axiosInstance.patch(`/contact/${id}/read`)
+    return response.data
+  },
+
+  deleteContactSubmission: async (id: string): Promise<void> => {
+    await axiosInstance.delete(`/contact/${id}`)
   },
 }

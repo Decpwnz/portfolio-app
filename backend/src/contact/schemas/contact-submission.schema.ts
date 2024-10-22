@@ -11,6 +11,12 @@ export class ContactSubmission extends Document {
 
   @Prop({ required: true })
   message: string;
+
+  @Prop({ default: false })
+  isRead: boolean;
+
+  @Prop({ default: Date.now })
+  createdAt: Date;
 }
 
 export const ContactSubmissionSchema =
