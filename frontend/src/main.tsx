@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css'
 
 import { store } from './app/store.ts'
 import App from './App.tsx'
+import AdminRoute from './components/AdminRoute'
 import About from './pages/About/index.tsx'
 import Admin from './pages/Admin/index.tsx'
 import Contacts from './pages/Contacts/index.tsx'
@@ -29,7 +30,14 @@ const router = createBrowserRouter([
       { path: 'about', element: <About /> },
       { path: 'contacts', element: <Contacts /> },
       { path: 'portfolio', element: <Portfolio /> },
-      { path: 'admin', element: <Admin /> },
+      {
+        path: 'admin',
+        element: (
+          <AdminRoute>
+            <Admin />
+          </AdminRoute>
+        ),
+      },
       { path: 'login', element: <Login /> },
       { path: 'register', element: <Register /> },
       { path: 'profile', element: <Profile /> },

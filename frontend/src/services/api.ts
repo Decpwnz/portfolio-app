@@ -47,11 +47,11 @@ export interface ContactFormData {
 }
 
 export const api = {
-  login: async (username: string, password: string): Promise<string> => {
+  login: async (username: string, password: string): Promise<{ token: string; user: User }> => {
     const response = await axiosInstance.post('/auth/login', { username, password })
-    const token = response.data.access_token
+    const { token, user } = response.data
     localStorage.setItem('token', token)
-    return token
+    return { token, user }
   },
 
   logout: () => {

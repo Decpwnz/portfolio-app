@@ -2,12 +2,19 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
 import { api } from '../../services/api'
 
+// Update the User interface to include the role
+interface User {
+  id: string
+  username: string
+  role: string
+}
+
 export const login = createAsyncThunk(
   'auth/login',
   async ({ username, password }: { username: string; password: string }, { rejectWithValue }) => {
     try {
-      const token = await api.login(username, password)
-      return { token }
+      const response = await api.login(username, password)
+      return { token: response.token, user: response.user }
     } catch (error) {
       if (error && typeof error === 'object' && 'response' in error) {
         const errorResponse = error as { response?: { data?: unknown } }
@@ -42,7 +49,7 @@ const authSlice = createSlice({
   name: 'auth',
   initialState: {
     isAuthenticated: false,
-    user: null as { id: string; username: string } | null,
+    user: null as User | null,
     token: null as string | null,
     error: null as string | null,
     loading: false,
@@ -57,6 +64,7 @@ const authSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.isAuthenticated = true
         state.token = action.payload.token
+        state.user = action.payload.user
         state.loading = false
       })
       .addCase(login.rejected, (state, action) => {
@@ -73,8 +81,9 @@ const authSlice = createSlice({
         state.error = null
       })
       .addCase(register.fulfilled, (state, action) => {
-        state.user = action.payload
+        state.user = action.payload as User
         state.loading = false
+        state.isAuthenticated = true
       })
       .addCase(register.rejected, (state, action) => {
         state.error = action.payload as string
