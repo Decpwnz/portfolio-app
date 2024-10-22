@@ -8,11 +8,13 @@ import { useAppSelector } from '../../app/hooks'
 import UserMenu from '../../components/UserMenu/UserMenu'
 
 function Home() {
-  const navigate = useNavigate()
-  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated)
-
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+
   const menuRef = useRef<HTMLDivElement>(null)
+
+  const navigate = useNavigate()
+
+  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated)
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

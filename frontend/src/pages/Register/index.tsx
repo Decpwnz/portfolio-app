@@ -4,21 +4,31 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import styles from './Register.module.css'
-import { api } from '../../services/api'
+import { useAppDispatch, useAppSelector } from '../../app/hooks'
+import { register } from '../../features/auth/authSlice'
 
 function Register() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+
+  const dispatch = useAppDispatch()
   const navigate = useNavigate()
+
+  const { error, loading } = useAppSelector((state) => state.auth)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      await api.register(username, password)
-      toast.success('Registration successful. Please log in.')
-      navigate('/login')
+      const resultAction = await dispatch(register({ username, password }))
+      if (register.fulfilled.match(resultAction)) {
+        toast.success('Registration successful. Please log in.')
+        navigate('/login')
+      } else if (register.rejected.match(resultAction)) {
+        toast.error((resultAction.payload as string) || 'Registration failed')
+      }
     } catch (error) {
       console.error('Registration failed:', error)
+      toast.error('An unexpected error occurred')
     }
   }
 
@@ -26,6 +36,7 @@ function Register() {
     <div className={styles.container}>
       <form onSubmit={handleSubmit} className={styles.form}>
         <h2>Register</h2>
+        {error && <p className={styles.error}>{error}</p>}
         <input
           type="text"
           value={username}
@@ -40,7 +51,9 @@ function Register() {
           placeholder="Password"
           required
         />
-        <button type="submit">Register</button>
+        <button type="submit" disabled={loading}>
+          {loading ? 'Registering...' : 'Register'}
+        </button>
       </form>
     </div>
   )

@@ -1,37 +1,34 @@
 import React, { useState } from 'react'
 
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
-import { toast } from 'react-toastify'
 
-import styles from './Login.module.css'
-import { useAppDispatch } from '../../app/hooks'
-import { setCredentials } from '../../features/auth/authSlice'
-import { api } from '../../services/api'
+import { RootState, AppDispatch } from '../../app/store'
+import { login } from '../../features/auth/authSlice'
 
 function Login() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+
+  const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
-  const dispatch = useAppDispatch()
+
+  const { error, loading } = useSelector((state: RootState) => state.auth)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    try {
-      const response = await api.login(username, password)
-      dispatch(setCredentials({ token: response }))
-      toast.success('Login successful')
+    const resultAction = await dispatch(login({ username, password }))
+    if (login.fulfilled.match(resultAction)) {
       navigate('/')
-    } catch (error) {
-      console.error('Login failed:', error)
-      toast.error('Login failed. Please check your credentials.')
     }
   }
 
   return (
-    <div className={styles.container}>
-      <form onSubmit={handleSubmit} className={styles.form}>
-        <h2>Login</h2>
+    <div>
+      <h2>Login</h2>
+      {error && <p>{error}</p>}
+      <form onSubmit={handleSubmit}>
         <input
           type="text"
           value={username}
@@ -46,7 +43,9 @@ function Login() {
           placeholder="Password"
           required
         />
-        <button type="submit">Login</button>
+        <button type="submit" disabled={loading}>
+          {loading ? 'Logging in...' : 'Login'}
+        </button>
       </form>
       <button>
         <Link to="/register">Don't have an account? Register here.</Link>

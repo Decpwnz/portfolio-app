@@ -6,6 +6,7 @@ import { logout } from '../../features/auth/authSlice'
 const UserMenu: React.FC = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
+
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated)
 
   const handleLogout = (e: React.MouseEvent) => {
