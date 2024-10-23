@@ -8,6 +8,9 @@ interface ProjectsState {
   currentPage: number
   loading: boolean
   error: string | null
+  sortField: string
+  sortOrder: 'asc' | 'desc'
+  filter: string
 }
 
 const initialState: ProjectsState = {
@@ -16,12 +19,27 @@ const initialState: ProjectsState = {
   currentPage: 1,
   loading: false,
   error: null,
+  sortField: 'createdAt',
+  sortOrder: 'desc',
+  filter: '',
 }
 
 export const fetchProjects = createAsyncThunk(
   'projects/fetchProjects',
-  async ({ page, limit }: { page: number; limit: number }) => {
-    const response = await api.getProjects(page, limit)
+  async ({
+    page,
+    limit,
+    sortField,
+    sortOrder,
+    filter,
+  }: {
+    page: number
+    limit: number
+    sortField: string
+    sortOrder: 'asc' | 'desc'
+    filter: string
+  }) => {
+    const response = await api.getProjects(page, limit, sortField, sortOrder, filter)
     return response
   }
 )
@@ -77,7 +95,17 @@ export const deleteProject = createAsyncThunk(
 const projectsSlice = createSlice({
   name: 'projects',
   initialState,
-  reducers: {},
+  reducers: {
+    setSortField: (state, action) => {
+      state.sortField = action.payload
+    },
+    setSortOrder: (state, action) => {
+      state.sortOrder = action.payload
+    },
+    setFilter: (state, action) => {
+      state.filter = action.payload
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchProjects.pending, (state) => {
@@ -109,5 +137,7 @@ const projectsSlice = createSlice({
       })
   },
 })
+
+export const { setSortField, setSortOrder, setFilter } = projectsSlice.actions
 
 export default projectsSlice.reducer

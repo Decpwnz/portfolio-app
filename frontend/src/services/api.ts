@@ -69,10 +69,13 @@ export const api = {
 
   getProjects: async (
     page: number = 1,
-    limit: number = 10
+    limit: number = 10,
+    sortField: string = 'createdAt',
+    sortOrder: 'asc' | 'desc' = 'desc',
+    filter: string = ''
   ): Promise<{ projects: Project[]; total: number }> => {
     const response = await axiosInstance.get('/projects', {
-      params: { page, limit },
+      params: { page, limit, sortField, sortOrder, filter },
     })
     return response.data
   },

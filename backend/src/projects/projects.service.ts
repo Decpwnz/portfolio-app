@@ -19,12 +19,34 @@ export class ProjectsService {
   async findAll(
     page: number = 1,
     limit: number = 10,
+    sortField: string = 'createdAt',
+    sortOrder: 'asc' | 'desc' = 'desc',
+    filter: string = '',
   ): Promise<{ projects: Project[]; total: number }> {
     const skip = (page - 1) * limit;
+    const sortOptions = { [sortField]: sortOrder };
+
+    const filterRegex = new RegExp(filter, 'i');
+    const filterQuery = filter
+      ? {
+          $or: [
+            { title: filterRegex },
+            { description: filterRegex },
+            { technologies: filterRegex },
+          ],
+        }
+      : {};
+
     const [projects, total] = await Promise.all([
-      this.projectModel.find().skip(skip).limit(limit).exec(),
-      this.projectModel.countDocuments(),
+      this.projectModel
+        .find(filterQuery)
+        .sort(sortOptions)
+        .skip(skip)
+        .limit(limit)
+        .exec(),
+      this.projectModel.countDocuments(filterQuery),
     ]);
+
     return { projects, total };
   }
 

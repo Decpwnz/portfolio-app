@@ -16,6 +16,9 @@ import {
   createProject,
   updateProject,
   deleteProject,
+  setSortField,
+  setSortOrder,
+  setFilter,
 } from '../../features/projects/projectsSlice'
 import { Project } from '../../services/api'
 
@@ -40,6 +43,9 @@ function Admin() {
     currentPage: currentProjectsPage,
     loading: projectsLoading,
     error: projectsError,
+    sortField,
+    sortOrder,
+    filter,
   } = useAppSelector((state) => state.projects)
 
   const {
@@ -51,9 +57,11 @@ function Admin() {
   } = useAppSelector((state) => state.contactSubmissions)
 
   useEffect(() => {
-    dispatch(fetchProjects({ page: projectsPage, limit: ITEMS_PER_PAGE }))
+    dispatch(
+      fetchProjects({ page: projectsPage, limit: ITEMS_PER_PAGE, sortField, sortOrder, filter })
+    )
     dispatch(fetchContactSubmissions({ page: submissionsPage, limit: ITEMS_PER_PAGE }))
-  }, [dispatch, projectsPage, submissionsPage])
+  }, [dispatch, projectsPage, submissionsPage, sortField, sortOrder, filter])
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -128,6 +136,16 @@ function Admin() {
     setSubmissionsPage(page)
   }
 
+  const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const [newSortField, newSortOrder] = event.target.value.split(':')
+    dispatch(setSortField(newSortField))
+    dispatch(setSortOrder(newSortOrder as 'asc' | 'desc'))
+  }
+
+  const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setFilter(event.target.value))
+  }
+
   if (projectsLoading || submissionsLoading) return <div>Loading...</div>
   if (projectsError || submissionsError)
     return <div>Error: {projectsError || submissionsError}</div>
@@ -187,6 +205,20 @@ function Admin() {
         )}
       </form>
       <h2>Projects</h2>
+      <div className={styles.controls}>
+        <select onChange={handleSortChange} value={`${sortField}:${sortOrder}`}>
+          <option value="createdAt:desc">Newest First</option>
+          <option value="createdAt:asc">Oldest First</option>
+          <option value="title:asc">Title A-Z</option>
+          <option value="title:desc">Title Z-A</option>
+        </select>
+        <input
+          type="text"
+          placeholder="Filter projects..."
+          value={filter}
+          onChange={handleFilterChange}
+        />
+      </div>
       <div className={styles.projectList}>
         {projects.map((project) => (
           <div key={project._id} className={styles.projectItem}>

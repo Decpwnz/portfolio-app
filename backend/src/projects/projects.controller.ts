@@ -28,8 +28,17 @@ export class ProjectsController {
   async findAll(
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 10,
+    @Query('sortField') sortField: string = 'createdAt',
+    @Query('sortOrder') sortOrder: 'asc' | 'desc' = 'desc',
+    @Query('filter') filter: string = '',
   ) {
-    return this.projectsService.findAll(page, limit);
+    return this.projectsService.findAll(
+      page,
+      limit,
+      sortField,
+      sortOrder,
+      filter,
+    );
   }
 
   @Get(':id')

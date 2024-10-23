@@ -69,3 +69,20 @@
 .submissionItem button {
   margin-right: 10px;
 }
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.controls select,
+.controls input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.controls input {
+  width: 200px;
+}
