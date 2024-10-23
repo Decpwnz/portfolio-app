@@ -74,10 +74,16 @@ function Portfolio() {
           <section className={styles.projectsGrid}>
             {projects.map((project) => (
               <div key={project._id} className={styles.projectCard}>
-                {project.imageUrl && (
-                  <img src={project.imageUrl} alt={project.title} className={styles.projectImage} />
-                )}
-                <h2>{project.title}</h2>
+                <Link to={`/portfolio/${project._id}`} className={styles.projectLinkTitle}>
+                  {project.imageUrl && (
+                    <img
+                      src={project.imageUrl}
+                      alt={project.title}
+                      className={styles.projectImage}
+                    />
+                  )}
+                  <h2>{project.title}</h2>
+                </Link>
                 <p>{project.description}</p>
                 <div className={styles.technologies}>
                   {project.technologies.map((tech, index) => (

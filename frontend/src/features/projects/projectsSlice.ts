@@ -11,6 +11,7 @@ interface ProjectsState {
   sortField: string
   sortOrder: 'asc' | 'desc'
   filter: string
+  selectedProject: Project | null
 }
 
 const initialState: ProjectsState = {
@@ -22,6 +23,7 @@ const initialState: ProjectsState = {
   sortField: 'createdAt',
   sortOrder: 'desc',
   filter: '',
+  selectedProject: null,
 }
 
 export const fetchProjects = createAsyncThunk(
@@ -92,6 +94,14 @@ export const deleteProject = createAsyncThunk(
   }
 )
 
+export const fetchProjectById = createAsyncThunk(
+  'projects/fetchProjectById',
+  async (id: string) => {
+    const response = await api.getProject(id)
+    return response
+  }
+)
+
 const projectsSlice = createSlice({
   name: 'projects',
   initialState,
@@ -134,6 +144,18 @@ const projectsSlice = createSlice({
       })
       .addCase(deleteProject.fulfilled, (state, action) => {
         state.projects = state.projects.filter((p) => p._id !== action.payload)
+      })
+      .addCase(fetchProjectById.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(fetchProjectById.fulfilled, (state, action) => {
+        state.loading = false
+        state.selectedProject = action.payload
+      })
+      .addCase(fetchProjectById.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.error.message || 'Failed to fetch project'
       })
   },
 })

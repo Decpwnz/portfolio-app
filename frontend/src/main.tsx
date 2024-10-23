@@ -17,7 +17,9 @@ import Login from './pages/Login/index.tsx'
 import NotFound from './pages/NotFound/index.tsx'
 import Portfolio from './pages/Portfolio/index.tsx'
 import Profile from './pages/Profile/index.tsx'
+import ProjectDetail from './pages/ProjectDetail/index.tsx'
 import Register from './pages/Register/index.tsx'
+
 import './index.css'
 
 const router = createBrowserRouter([
@@ -30,6 +32,7 @@ const router = createBrowserRouter([
       { path: 'about', element: <About /> },
       { path: 'contacts', element: <Contacts /> },
       { path: 'portfolio', element: <Portfolio /> },
+      { path: 'portfolio/:id', element: <ProjectDetail /> },
       {
         path: 'admin',
         element: (
