@@ -10,6 +10,9 @@ import {
   fetchContactSubmissions,
   markSubmissionAsRead,
   deleteContactSubmission,
+  setSubmissionsSortField,
+  setSubmissionsSortOrder,
+  setSubmissionsFilter,
 } from '../../features/contactSubmissions/contactSubmissionsSlice'
 import {
   fetchProjects,
@@ -43,9 +46,9 @@ function Admin() {
     currentPage: currentProjectsPage,
     loading: projectsLoading,
     error: projectsError,
-    sortField,
-    sortOrder,
-    filter,
+    sortField: projectsSortField,
+    sortOrder: projectsSortOrder,
+    filter: projectsFilter,
   } = useAppSelector((state) => state.projects)
 
   const {
@@ -54,14 +57,41 @@ function Admin() {
     currentPage: currentSubmissionsPage,
     loading: submissionsLoading,
     error: submissionsError,
+    sortField: submissionsSortField,
+    sortOrder: submissionsSortOrder,
+    filter: submissionsFilter,
   } = useAppSelector((state) => state.contactSubmissions)
 
   useEffect(() => {
     dispatch(
-      fetchProjects({ page: projectsPage, limit: ITEMS_PER_PAGE, sortField, sortOrder, filter })
+      fetchProjects({
+        page: projectsPage,
+        limit: ITEMS_PER_PAGE,
+        sortField: projectsSortField,
+        sortOrder: projectsSortOrder,
+        filter: projectsFilter,
+      })
     )
-    dispatch(fetchContactSubmissions({ page: submissionsPage, limit: ITEMS_PER_PAGE }))
-  }, [dispatch, projectsPage, submissionsPage, sortField, sortOrder, filter])
+    dispatch(
+      fetchContactSubmissions({
+        page: submissionsPage,
+        limit: ITEMS_PER_PAGE,
+        sortField: submissionsSortField,
+        sortOrder: submissionsSortOrder,
+        filter: submissionsFilter,
+      })
+    )
+  }, [
+    dispatch,
+    projectsPage,
+    submissionsPage,
+    projectsSortField,
+    projectsSortOrder,
+    projectsFilter,
+    submissionsSortField,
+    submissionsSortOrder,
+    submissionsFilter,
+  ])
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -142,8 +172,18 @@ function Admin() {
     dispatch(setSortOrder(newSortOrder as 'asc' | 'desc'))
   }
 
+  const handleSubmissionsSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const [newSortField, newSortOrder] = event.target.value.split(':')
+    dispatch(setSubmissionsSortField(newSortField))
+    dispatch(setSubmissionsSortOrder(newSortOrder as 'asc' | 'desc'))
+  }
+
   const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setFilter(event.target.value))
+  }
+
+  const handleSubmissionsFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setSubmissionsFilter(event.target.value))
   }
 
   if (projectsLoading || submissionsLoading) return <div>Loading...</div>
@@ -206,7 +246,7 @@ function Admin() {
       </form>
       <h2>Projects</h2>
       <div className={styles.controls}>
-        <select onChange={handleSortChange} value={`${sortField}:${sortOrder}`}>
+        <select onChange={handleSortChange} value={`${projectsSortField}:${projectsSortOrder}`}>
           <option value="createdAt:desc">Newest First</option>
           <option value="createdAt:asc">Oldest First</option>
           <option value="title:asc">Title A-Z</option>
@@ -215,7 +255,7 @@ function Admin() {
         <input
           type="text"
           placeholder="Filter projects..."
-          value={filter}
+          value={projectsFilter}
           onChange={handleFilterChange}
         />
       </div>
@@ -237,6 +277,23 @@ function Admin() {
         onPageChange={handleProjectsPageChange}
       />
       <h2>Contact Submissions</h2>
+      <div className={styles.controls}>
+        <select
+          onChange={handleSubmissionsSortChange}
+          value={`${submissionsSortField}:${submissionsSortOrder}`}
+        >
+          <option value="createdAt:desc">Newest First</option>
+          <option value="createdAt:asc">Oldest First</option>
+          <option value="name:asc">Name A-Z</option>
+          <option value="name:desc">Name Z-A</option>
+        </select>
+        <input
+          type="text"
+          placeholder="Filter submissions..."
+          value={submissionsFilter}
+          onChange={handleSubmissionsFilterChange}
+        />
+      </div>
       <div className={styles.submissionList}>
         {submissions.map((submission) => (
           <div key={submission._id} className={styles.submissionItem}>

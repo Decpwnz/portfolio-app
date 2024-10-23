@@ -30,8 +30,17 @@ export class ContactController {
   async findAll(
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 10,
+    @Query('sortField') sortField: string = 'createdAt',
+    @Query('sortOrder') sortOrder: 'asc' | 'desc' = 'desc',
+    @Query('filter') filter: string = '',
   ) {
-    return this.contactService.findAll(page, limit);
+    return this.contactService.findAll(
+      page,
+      limit,
+      sortField,
+      sortOrder,
+      filter,
+    );
   }
 
   @Patch(':id/read')

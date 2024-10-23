@@ -17,6 +17,9 @@ interface ContactSubmissionsState {
   currentPage: number
   loading: boolean
   error: string | null
+  sortField: string
+  sortOrder: 'asc' | 'desc'
+  filter: string
 }
 
 const initialState: ContactSubmissionsState = {
@@ -25,12 +28,27 @@ const initialState: ContactSubmissionsState = {
   currentPage: 1,
   loading: false,
   error: null,
+  sortField: 'createdAt',
+  sortOrder: 'desc' as 'asc' | 'desc',
+  filter: '',
 }
 
 export const fetchContactSubmissions = createAsyncThunk(
   'contactSubmissions/fetchContactSubmissions',
-  async ({ page, limit }: { page: number; limit: number }) => {
-    const response = await api.getContactSubmissions(page, limit)
+  async ({
+    page,
+    limit,
+    sortField,
+    sortOrder,
+    filter,
+  }: {
+    page: number
+    limit: number
+    sortField: string
+    sortOrder: 'asc' | 'desc'
+    filter: string
+  }) => {
+    const response = await api.getContactSubmissions(page, limit, sortField, sortOrder, filter)
     return response
   }
 )
@@ -54,7 +72,17 @@ export const deleteContactSubmission = createAsyncThunk(
 const contactSubmissionsSlice = createSlice({
   name: 'contactSubmissions',
   initialState,
-  reducers: {},
+  reducers: {
+    setSubmissionsSortField: (state, action) => {
+      state.sortField = action.payload
+    },
+    setSubmissionsSortOrder: (state, action) => {
+      state.sortOrder = action.payload
+    },
+    setSubmissionsFilter: (state, action) => {
+      state.filter = action.payload
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchContactSubmissions.pending, (state) => {
@@ -86,5 +114,8 @@ const contactSubmissionsSlice = createSlice({
       })
   },
 })
+
+export const { setSubmissionsSortField, setSubmissionsSortOrder, setSubmissionsFilter } =
+  contactSubmissionsSlice.actions
 
 export default contactSubmissionsSlice.reducer

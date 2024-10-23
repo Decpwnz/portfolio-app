@@ -20,12 +20,34 @@ export class ContactService {
   async findAll(
     page: number = 1,
     limit: number = 10,
+    sortField: string = 'createdAt',
+    sortOrder: 'asc' | 'desc' = 'desc',
+    filter: string = '',
   ): Promise<{ submissions: ContactSubmission[]; total: number }> {
     const skip = (page - 1) * limit;
+    const sortOptions = { [sortField]: sortOrder };
+
+    const filterRegex = new RegExp(filter, 'i');
+    const filterQuery = filter
+      ? {
+          $or: [
+            { name: filterRegex },
+            { email: filterRegex },
+            { message: filterRegex },
+          ],
+        }
+      : {};
+
     const [submissions, total] = await Promise.all([
-      this.contactSubmissionModel.find().skip(skip).limit(limit).exec(),
-      this.contactSubmissionModel.countDocuments(),
+      this.contactSubmissionModel
+        .find(filterQuery)
+        .sort(sortOptions)
+        .skip(skip)
+        .limit(limit)
+        .exec(),
+      this.contactSubmissionModel.countDocuments(filterQuery),
     ]);
+
     return { submissions, total };
   }
 
