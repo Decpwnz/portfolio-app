@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 
+import { debounce } from 'lodash'
 import { Link } from 'react-router-dom'
 
 import styles from './Portfolio.module.css'
@@ -19,6 +20,7 @@ function Portfolio() {
     useAppSelector((state) => state.projects)
 
   const [page, setPage] = useState(1)
+  const [localFilter, setLocalFilter] = useState(filter)
 
   useEffect(() => {
     dispatch(fetchProjects({ page, limit: ITEMS_PER_PAGE, sortField, sortOrder, filter }))
@@ -34,12 +36,14 @@ function Portfolio() {
     dispatch(setSortOrder(newSortOrder as 'asc' | 'desc'))
   }
 
+  const debouncedSetFilterRef = useRef(debounce((value: string) => dispatch(setFilter(value)), 300))
+
   const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setFilter(event.target.value))
+    setLocalFilter(event.target.value)
+    debouncedSetFilterRef.current(event.target.value)
   }
 
-  if (loading) return <div>Loading...</div>
-  if (error) return <div>{error}</div>
+  if (error) return <div>Error: {error}</div>
 
   return (
     <div className={styles.container}>
@@ -59,39 +63,45 @@ function Portfolio() {
         <input
           type="text"
           placeholder="Filter projects..."
-          value={filter}
+          value={localFilter}
           onChange={handleFilterChange}
         />
       </div>
       <main className={styles.main}>
-        <section className={styles.projectsGrid}>
-          {projects.map((project) => (
-            <div key={project._id} className={styles.projectCard}>
-              {project.imageUrl && (
-                <img src={project.imageUrl} alt={project.title} className={styles.projectImage} />
-              )}
-              <h2>{project.title}</h2>
-              <p>{project.description}</p>
-              <div className={styles.technologies}>
-                {project.technologies.map((tech, index) => (
-                  <span key={index} className={styles.tech}>
-                    {tech}
-                  </span>
-                ))}
+        {loading ? (
+          <div>Loading...</div>
+        ) : projects.length > 0 ? (
+          <section className={styles.projectsGrid}>
+            {projects.map((project) => (
+              <div key={project._id} className={styles.projectCard}>
+                {project.imageUrl && (
+                  <img src={project.imageUrl} alt={project.title} className={styles.projectImage} />
+                )}
+                <h2>{project.title}</h2>
+                <p>{project.description}</p>
+                <div className={styles.technologies}>
+                  {project.technologies.map((tech, index) => (
+                    <span key={index} className={styles.tech}>
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+                {project.projectUrl && (
+                  <a
+                    href={project.projectUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.projectLink}
+                  >
+                    View Project
+                  </a>
+                )}
               </div>
-              {project.projectUrl && (
-                <a
-                  href={project.projectUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.projectLink}
-                >
-                  View Project
-                </a>
-              )}
-            </div>
-          ))}
-        </section>
+            ))}
+          </section>
+        ) : (
+          <div>No projects found</div>
+        )}
       </main>
       <Pagination
         currentPage={currentPage}
