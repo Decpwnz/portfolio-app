@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom'
 
 import styles from './Admin.module.css'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
+import Pagination from '../../components/Pagination/Pagination'
+import { ITEMS_PER_PAGE } from '../../constants/pagination'
 import {
   fetchContactSubmissions,
   markSubmissionAsRead,
@@ -18,18 +20,6 @@ import {
 import { Project } from '../../services/api'
 
 function Admin() {
-  const dispatch = useAppDispatch()
-  const navigate = useNavigate()
-  const {
-    projects,
-    loading: projectsLoading,
-    error: projectsError,
-  } = useAppSelector((state) => state.projects)
-  const {
-    submissions,
-    loading: submissionsLoading,
-    error: submissionsError,
-  } = useAppSelector((state) => state.contactSubmissions)
   const [newProject, setNewProject] = useState<Omit<Project, '_id'>>({
     title: '',
     description: '',
@@ -38,11 +28,32 @@ function Admin() {
     projectUrl: '',
   })
   const [editingProject, setEditingProject] = useState<Project | null>(null)
+  const [projectsPage, setProjectsPage] = useState(1)
+  const [submissionsPage, setSubmissionsPage] = useState(1)
+
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+
+  const {
+    projects,
+    total: totalProjects,
+    currentPage: currentProjectsPage,
+    loading: projectsLoading,
+    error: projectsError,
+  } = useAppSelector((state) => state.projects)
+
+  const {
+    submissions,
+    total: totalSubmissions,
+    currentPage: currentSubmissionsPage,
+    loading: submissionsLoading,
+    error: submissionsError,
+  } = useAppSelector((state) => state.contactSubmissions)
 
   useEffect(() => {
-    dispatch(fetchProjects())
-    dispatch(fetchContactSubmissions())
-  }, [dispatch])
+    dispatch(fetchProjects({ page: projectsPage, limit: ITEMS_PER_PAGE }))
+    dispatch(fetchContactSubmissions({ page: submissionsPage, limit: ITEMS_PER_PAGE }))
+  }, [dispatch, projectsPage, submissionsPage])
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -107,6 +118,14 @@ function Admin() {
     if (window.confirm('Are you sure you want to delete this submission?')) {
       dispatch(deleteContactSubmission(id))
     }
+  }
+
+  const handleProjectsPageChange = (page: number) => {
+    setProjectsPage(page)
+  }
+
+  const handleSubmissionsPageChange = (page: number) => {
+    setSubmissionsPage(page)
   }
 
   if (projectsLoading || submissionsLoading) return <div>Loading...</div>
@@ -179,6 +198,12 @@ function Admin() {
           </div>
         ))}
       </div>
+      <Pagination
+        currentPage={currentProjectsPage}
+        totalItems={totalProjects}
+        itemsPerPage={ITEMS_PER_PAGE}
+        onPageChange={handleProjectsPageChange}
+      />
       <h2>Contact Submissions</h2>
       <div className={styles.submissionList}>
         {submissions.map((submission) => (
@@ -195,6 +220,12 @@ function Admin() {
           </div>
         ))}
       </div>
+      <Pagination
+        currentPage={currentSubmissionsPage}
+        totalItems={totalSubmissions}
+        itemsPerPage={ITEMS_PER_PAGE}
+        onPageChange={handleSubmissionsPageChange}
+      />
     </div>
   )
 }

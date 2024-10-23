@@ -4,20 +4,27 @@ import { api, Project } from '../../services/api'
 
 interface ProjectsState {
   projects: Project[]
+  total: number
+  currentPage: number
   loading: boolean
   error: string | null
 }
 
 const initialState: ProjectsState = {
   projects: [],
+  total: 0,
+  currentPage: 1,
   loading: false,
   error: null,
 }
 
-export const fetchProjects = createAsyncThunk('projects/fetchProjects', async () => {
-  const response = await api.getProjects()
-  return response
-})
+export const fetchProjects = createAsyncThunk(
+  'projects/fetchProjects',
+  async ({ page, limit }: { page: number; limit: number }) => {
+    const response = await api.getProjects(page, limit)
+    return response
+  }
+)
 
 export const createProject = createAsyncThunk(
   'projects/createProject',
@@ -78,12 +85,15 @@ const projectsSlice = createSlice({
         state.error = null
       })
       .addCase(fetchProjects.fulfilled, (state, action) => {
-        state.projects = action.payload
         state.loading = false
+        state.projects = action.payload.projects
+        state.total = action.payload.total
+        state.currentPage = action.meta.arg.page
+        state.error = null
       })
       .addCase(fetchProjects.rejected, (state, action) => {
         state.loading = false
-        state.error = action.error.message || 'Failed to fetch projects'
+        state.error = action.error.message || 'An error occurred while fetching projects'
       })
       .addCase(createProject.fulfilled, (state, action) => {
         state.projects.push(action.payload)

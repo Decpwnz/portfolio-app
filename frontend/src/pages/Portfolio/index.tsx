@@ -14,7 +14,7 @@ function Portfolio() {
     const fetchProjects = async () => {
       try {
         const fetchedProjects = await api.getProjects()
-        setProjects(fetchedProjects)
+        setProjects(fetchedProjects.projects)
         setLoading(false)
       } catch (err) {
         setError('Failed to fetch projects. Please try again later.')

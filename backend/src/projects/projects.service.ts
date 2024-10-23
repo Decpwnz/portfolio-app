@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Project } from './entities/project.entity';
+import { Project } from './schemas/project.schema';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 
@@ -16,8 +16,16 @@ export class ProjectsService {
     return createdProject.save();
   }
 
-  async findAll(): Promise<Project[]> {
-    return this.projectModel.find().exec();
+  async findAll(
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<{ projects: Project[]; total: number }> {
+    const skip = (page - 1) * limit;
+    const [projects, total] = await Promise.all([
+      this.projectModel.find().skip(skip).limit(limit).exec(),
+      this.projectModel.countDocuments(),
+    ]);
+    return { projects, total };
   }
 
   async findOne(id: string): Promise<Project> {

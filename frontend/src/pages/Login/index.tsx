@@ -20,7 +20,7 @@ function Login() {
     e.preventDefault()
     const resultAction = await dispatch(login({ username, password }))
     if (login.fulfilled.match(resultAction)) {
-      navigate('/')
+      navigate('/admin')
     }
   }
 

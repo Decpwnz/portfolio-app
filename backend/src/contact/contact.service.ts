@@ -17,8 +17,16 @@ export class ContactService {
     return { message: 'Form submitted successfully' };
   }
 
-  async getAllSubmissions() {
-    return this.contactSubmissionModel.find().sort({ createdAt: -1 }).exec();
+  async findAll(
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<{ submissions: ContactSubmission[]; total: number }> {
+    const skip = (page - 1) * limit;
+    const [submissions, total] = await Promise.all([
+      this.contactSubmissionModel.find().skip(skip).limit(limit).exec(),
+      this.contactSubmissionModel.countDocuments(),
+    ]);
+    return { submissions, total };
   }
 
   async markAsRead(id: string): Promise<ContactSubmission> {

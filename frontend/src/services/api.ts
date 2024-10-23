@@ -67,8 +67,13 @@ export const api = {
     localStorage.removeItem('token')
   },
 
-  getProjects: async (): Promise<Project[]> => {
-    const response = await axiosInstance.get('/projects')
+  getProjects: async (
+    page: number = 1,
+    limit: number = 10
+  ): Promise<{ projects: Project[]; total: number }> => {
+    const response = await axiosInstance.get('/projects', {
+      params: { page, limit },
+    })
     return response.data
   },
 
@@ -113,8 +118,13 @@ export const api = {
     return response.data
   },
 
-  getContactSubmissions: async (): Promise<ContactSubmission[]> => {
-    const response = await axiosInstance.get('/contact')
+  getContactSubmissions: async (
+    page: number = 1,
+    limit: number = 10
+  ): Promise<{ submissions: ContactSubmission[]; total: number }> => {
+    const response = await axiosInstance.get('/contact', {
+      params: { page, limit },
+    })
     return response.data
   },
 
