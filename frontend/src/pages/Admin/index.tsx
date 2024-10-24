@@ -186,14 +186,43 @@ function Admin() {
     dispatch(setSubmissionsFilter(event.target.value))
   }
 
-  if (projectsLoading || submissionsLoading) return <div>Loading...</div>
+  const renderSkeleton = () => (
+    <>
+      <div className={`${styles.form} ${styles.skeleton}`} style={{ height: '300px' }} />
+      <div className={styles.projectList}>
+        {[...Array(3)].map((_, index) => (
+          <div
+            key={index}
+            className={`${styles.projectItem} ${styles.skeleton}`}
+            style={{ height: '150px' }}
+          />
+        ))}
+      </div>
+      <div className={styles.submissionList}>
+        {[...Array(3)].map((_, index) => (
+          <div
+            key={index}
+            className={`${styles.submissionItem} ${styles.skeleton}`}
+            style={{ height: '150px' }}
+          />
+        ))}
+      </div>
+    </>
+  )
+
+  if (projectsLoading || submissionsLoading)
+    return <div className={styles.container}>{renderSkeleton()}</div>
   if (projectsError || submissionsError)
-    return <div>Error: {projectsError || submissionsError}</div>
+    return <div className={styles.container}>Error: {projectsError || submissionsError}</div>
 
   return (
     <div className={styles.container}>
-      <h1>Admin Dashboard</h1>
-      <button onClick={() => navigate('/')}>Back to Home</button>
+      <header className={styles.header}>
+        <h1>Admin Dashboard</h1>
+        <button onClick={() => navigate('/')} className={styles.backButton}>
+          Back to Home
+        </button>
+      </header>
       <h2>{editingProject ? 'Edit Project' : 'Add New Project'}</h2>
       <form onSubmit={handleSubmit} className={styles.form}>
         <input
