@@ -21,6 +21,10 @@ axiosInstance.interceptors.response.use(
     const message =
       (error.response?.data as { message?: string })?.message || 'An unexpected error occurred'
     toast.error(message)
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token')
+      window.location.href = '/login'
+    }
     return Promise.reject(error)
   }
 )

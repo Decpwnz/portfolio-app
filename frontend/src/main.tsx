@@ -9,8 +9,8 @@ import 'react-toastify/dist/ReactToastify.css'
 import { store } from './app/store.ts'
 import App from './App.tsx'
 import AdminRoute from './components/AdminRoute'
+import PrivateRoute from './components/PrivateRoute.tsx'
 import About from './pages/About/index.tsx'
-import Admin from './pages/Admin/index.tsx'
 import Contacts from './pages/Contacts/index.tsx'
 import Home from './pages/Home/index.tsx'
 import Login from './pages/Login/index.tsx'
@@ -36,14 +36,21 @@ const router = createBrowserRouter([
       {
         path: 'admin',
         element: (
-          <AdminRoute>
-            <Admin />
-          </AdminRoute>
+          <PrivateRoute>
+            <AdminRoute />
+          </PrivateRoute>
         ),
       },
       { path: 'login', element: <Login /> },
       { path: 'register', element: <Register /> },
-      { path: 'profile', element: <Profile /> },
+      {
+        path: 'profile',
+        element: (
+          <PrivateRoute>
+            <Profile />
+          </PrivateRoute>
+        ),
+      },
     ],
   },
 ])

@@ -1,17 +1,6 @@
-import React from 'react'
+import withRoleCheck from './withRoleCheck'
+import Admin from '../pages/Admin'
 
-import { Navigate } from 'react-router-dom'
-
-import { useAppSelector } from '../app/hooks'
-
-function AdminRoute({ children }: { children: React.ReactElement }) {
-  const { isAuthenticated, user } = useAppSelector((state) => state.auth)
-
-  if (!isAuthenticated || user?.role !== 'admin') {
-    return <Navigate to="/login" replace />
-  }
-
-  return children
-}
+const AdminRoute = withRoleCheck(['admin'])(Admin)
 
 export default AdminRoute
