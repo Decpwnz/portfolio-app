@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
 import { api, Project } from '../../services/api'
 
-interface ProjectsState {
+export interface ProjectsState {
   projects: Project[]
   total: number
   currentPage: number
