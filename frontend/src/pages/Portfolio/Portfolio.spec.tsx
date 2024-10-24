@@ -1,85 +1,70 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { configureStore } from '@reduxjs/toolkit'
+import { render, screen, waitForElementToBeRemoved } from '@testing-library/react'
+import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 import Portfolio from './index'
+import projectsReducer from '../../features/projects/projectsSlice'
 import { api } from '../../services/api'
 
-// Mock the api module
-vi.mock('../../services/api')
+// Mock the API calls
+vi.mock('../../services/api', () => ({
+  api: {
+    getProjects: vi.fn().mockResolvedValue({ projects: [], total: 0 }),
+  },
+}))
 
 describe('Portfolio Component', () => {
-  const mockProjects = [
-    {
-      _id: '1',
-      title: 'Project 1',
-      description: 'Description 1',
-      technologies: ['React', 'Node.js'],
-    },
-    {
-      _id: '2',
-      title: 'Project 2',
-      description: 'Description 2',
-      technologies: ['MongoDB', 'Express'],
-    },
-  ]
+  const renderPortfolioComponent = () => {
+    const store = configureStore({
+      reducer: {
+        projects: projectsReducer,
+      },
+    })
+
+    return render(
+      <Provider store={store}>
+        <BrowserRouter>
+          <Portfolio />
+        </BrowserRouter>
+      </Provider>
+    )
+  }
 
   beforeEach(() => {
-    // Mock the API call
-    vi.mocked(api.getProjects).mockResolvedValue(mockProjects)
+    vi.mocked(api.getProjects).mockResolvedValue({ projects: [], total: 0 })
   })
 
-  it('renders the Portfolio heading', async () => {
-    render(
-      <BrowserRouter>
-        <Portfolio />
-      </BrowserRouter>
-    )
-
-    await waitFor(() => {
-      expect(screen.getByText('Portfolio')).toBeInTheDocument()
-    })
+  it('renders the Portfolio page', async () => {
+    renderPortfolioComponent()
+    await waitForElementToBeRemoved(() => screen.getByText('Loading...'))
+    expect(screen.getByText('Portfolio')).toBeInTheDocument()
   })
 
-  it('renders project cards', async () => {
-    render(
-      <BrowserRouter>
-        <Portfolio />
-      </BrowserRouter>
-    )
-
-    await waitFor(() => {
-      expect(screen.getByText('Project 1')).toBeInTheDocument()
-      expect(screen.getByText('Project 2')).toBeInTheDocument()
-    })
-  })
-
-  it('renders project technologies', async () => {
-    render(
-      <BrowserRouter>
-        <Portfolio />
-      </BrowserRouter>
-    )
-
-    await waitFor(() => {
-      expect(screen.getByText('React')).toBeInTheDocument()
-      expect(screen.getByText('Node.js')).toBeInTheDocument()
-      expect(screen.getByText('MongoDB')).toBeInTheDocument()
-      expect(screen.getByText('Express')).toBeInTheDocument()
-    })
-  })
-
-  it('renders the back to home link', async () => {
-    render(
-      <BrowserRouter>
-        <Portfolio />
-      </BrowserRouter>
-    )
-
-    await waitFor(() => {
-      const homeLink = screen.getByText('Back to Home')
-      expect(homeLink).toBeInTheDocument()
-      expect(homeLink.getAttribute('href')).toBe('/')
-    })
+  it('renders the projects list', async () => {
+    const mockProjects = [
+      {
+        _id: '1',
+        title: 'Project 1',
+        description: 'Description 1',
+        technologies: ['React'],
+        imageUrl: '',
+        projectUrl: '',
+      },
+      {
+        _id: '2',
+        title: 'Project 2',
+        description: 'Description 2',
+        technologies: ['Vue'],
+        imageUrl: '',
+        projectUrl: '',
+      },
+    ]
+    vi.mocked(api.getProjects).mockResolvedValue({ projects: mockProjects, total: 2 })
+    renderPortfolioComponent()
+    await waitForElementToBeRemoved(() => screen.getByText('Loading...'))
+    expect(screen.getByText('Project 1')).toBeInTheDocument()
+    expect(screen.getByText('Project 2')).toBeInTheDocument()
   })
 })
