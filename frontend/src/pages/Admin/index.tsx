@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 
 import { useNavigate } from 'react-router-dom'
 
@@ -40,58 +40,45 @@ function Admin() {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
-  const {
-    projects,
-    total: totalProjects,
-    currentPage: currentProjectsPage,
-    loading: projectsLoading,
-    error: projectsError,
-    sortField: projectsSortField,
-    sortOrder: projectsSortOrder,
-    filter: projectsFilter,
-  } = useAppSelector((state) => state.projects)
+  const projectsData = useAppSelector((state) => state.projects)
+  const submissionsData = useAppSelector((state) => state.contactSubmissions)
 
-  const {
-    submissions,
-    total: totalSubmissions,
-    currentPage: currentSubmissionsPage,
-    loading: submissionsLoading,
-    error: submissionsError,
-    sortField: submissionsSortField,
-    sortOrder: submissionsSortOrder,
-    filter: submissionsFilter,
-  } = useAppSelector((state) => state.contactSubmissions)
+  const memoizedProjectsFetch = useMemo(() => {
+    return () =>
+      dispatch(
+        fetchProjects({
+          page: projectsPage,
+          limit: ITEMS_PER_PAGE,
+          sortField: projectsData.sortField,
+          sortOrder: projectsData.sortOrder,
+          filter: projectsData.filter,
+        })
+      )
+  }, [dispatch, projectsPage, projectsData.sortField, projectsData.sortOrder, projectsData.filter])
 
-  useEffect(() => {
-    dispatch(
-      fetchProjects({
-        page: projectsPage,
-        limit: ITEMS_PER_PAGE,
-        sortField: projectsSortField,
-        sortOrder: projectsSortOrder,
-        filter: projectsFilter,
-      })
-    )
-    dispatch(
-      fetchContactSubmissions({
-        page: submissionsPage,
-        limit: ITEMS_PER_PAGE,
-        sortField: submissionsSortField,
-        sortOrder: submissionsSortOrder,
-        filter: submissionsFilter,
-      })
-    )
+  const memoizedSubmissionsFetch = useMemo(() => {
+    return () =>
+      dispatch(
+        fetchContactSubmissions({
+          page: submissionsPage,
+          limit: ITEMS_PER_PAGE,
+          sortField: submissionsData.sortField,
+          sortOrder: submissionsData.sortOrder,
+          filter: submissionsData.filter,
+        })
+      )
   }, [
     dispatch,
-    projectsPage,
     submissionsPage,
-    projectsSortField,
-    projectsSortOrder,
-    projectsFilter,
-    submissionsSortField,
-    submissionsSortOrder,
-    submissionsFilter,
+    submissionsData.sortField,
+    submissionsData.sortOrder,
+    submissionsData.filter,
   ])
+
+  useEffect(() => {
+    memoizedProjectsFetch()
+    memoizedSubmissionsFetch()
+  }, [memoizedProjectsFetch, memoizedSubmissionsFetch])
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -210,10 +197,12 @@ function Admin() {
     </>
   )
 
-  if (projectsLoading || submissionsLoading)
+  if (projectsData.loading || submissionsData.loading)
     return <div className={styles.container}>{renderSkeleton()}</div>
-  if (projectsError || submissionsError)
-    return <div className={styles.container}>Error: {projectsError || submissionsError}</div>
+  if (projectsData.error || submissionsData.error)
+    return (
+      <div className={styles.container}>Error: {projectsData.error || submissionsData.error}</div>
+    )
 
   return (
     <div className={styles.container}>
@@ -275,7 +264,10 @@ function Admin() {
       </form>
       <h2>Projects</h2>
       <div className={styles.controls}>
-        <select onChange={handleSortChange} value={`${projectsSortField}:${projectsSortOrder}`}>
+        <select
+          onChange={handleSortChange}
+          value={`${projectsData.sortField}:${projectsData.sortOrder}`}
+        >
           <option value="createdAt:desc">Newest First</option>
           <option value="createdAt:asc">Oldest First</option>
           <option value="title:asc">Title A-Z</option>
@@ -284,12 +276,12 @@ function Admin() {
         <input
           type="text"
           placeholder="Filter projects..."
-          value={projectsFilter}
+          value={projectsData.filter}
           onChange={handleFilterChange}
         />
       </div>
       <div className={styles.projectList}>
-        {projects.map((project) => (
+        {projectsData.projects.map((project) => (
           <div key={project._id} className={styles.projectItem}>
             <h3>{project.title}</h3>
             <p>{project.description}</p>
@@ -300,8 +292,8 @@ function Admin() {
         ))}
       </div>
       <Pagination
-        currentPage={currentProjectsPage}
-        totalItems={totalProjects}
+        currentPage={projectsData.currentPage}
+        totalItems={projectsData.total}
         itemsPerPage={ITEMS_PER_PAGE}
         onPageChange={handleProjectsPageChange}
       />
@@ -309,7 +301,7 @@ function Admin() {
       <div className={styles.controls}>
         <select
           onChange={handleSubmissionsSortChange}
-          value={`${submissionsSortField}:${submissionsSortOrder}`}
+          value={`${submissionsData.sortField}:${submissionsData.sortOrder}`}
         >
           <option value="createdAt:desc">Newest First</option>
           <option value="createdAt:asc">Oldest First</option>
@@ -319,12 +311,12 @@ function Admin() {
         <input
           type="text"
           placeholder="Filter submissions..."
-          value={submissionsFilter}
+          value={submissionsData.filter}
           onChange={handleSubmissionsFilterChange}
         />
       </div>
       <div className={styles.submissionList}>
-        {submissions.map((submission) => (
+        {submissionsData.submissions.map((submission) => (
           <div key={submission._id} className={styles.submissionItem}>
             <h3>{submission.name}</h3>
             <p>Email: {submission.email}</p>
@@ -339,8 +331,8 @@ function Admin() {
         ))}
       </div>
       <Pagination
-        currentPage={currentSubmissionsPage}
-        totalItems={totalSubmissions}
+        currentPage={submissionsData.currentPage}
+        totalItems={submissionsData.total}
         itemsPerPage={ITEMS_PER_PAGE}
         onPageChange={handleSubmissionsPageChange}
       />

@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios'
+import LRUCache from 'lru-cache'
 import { toast } from 'react-toastify'
-
 const API_URL = 'http://localhost:3000'
 
 const axiosInstance = axios.create({
@@ -59,6 +59,11 @@ export interface ContactSubmission {
   isRead: boolean
 }
 
+const projectsCache = new LRUCache<string, { projects: Project[]; total: number }>({ max: 100 })
+const submissionsCache = new LRUCache<string, { submissions: ContactSubmission[]; total: number }>({
+  max: 100,
+})
+
 export const api = {
   login: async (username: string, password: string): Promise<{ token: string; user: User }> => {
     const response = await axiosInstance.post('/auth/login', { username, password })
@@ -78,9 +83,14 @@ export const api = {
     sortOrder: 'asc' | 'desc' = 'desc',
     filter: string = ''
   ): Promise<{ projects: Project[]; total: number }> => {
+    const cacheKey = `projects_${page}_${limit}_${sortField}_${sortOrder}_${filter}`
+    const cachedData = projectsCache.get(cacheKey)
+    if (cachedData) return cachedData
+
     const response = await axiosInstance.get('/projects', {
       params: { page, limit, sortField, sortOrder, filter },
     })
+    projectsCache.set(cacheKey, response.data)
     return response.data
   },
 
@@ -132,9 +142,14 @@ export const api = {
     sortOrder: 'asc' | 'desc' = 'desc',
     filter: string = ''
   ): Promise<{ submissions: ContactSubmission[]; total: number }> => {
+    const cacheKey = `submissions_${page}_${limit}_${sortField}_${sortOrder}_${filter}`
+    const cachedData = submissionsCache.get(cacheKey)
+    if (cachedData) return cachedData
+
     const response = await axiosInstance.get('/contact', {
       params: { page, limit, sortField, sortOrder, filter },
     })
+    submissionsCache.set(cacheKey, response.data)
     return response.data
   },
 

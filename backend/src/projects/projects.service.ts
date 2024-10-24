@@ -23,31 +23,37 @@ export class ProjectsService {
     sortOrder: 'asc' | 'desc' = 'desc',
     filter: string = '',
   ): Promise<{ projects: Project[]; total: number }> {
-    const skip = (page - 1) * limit;
-    const sortOptions = { [sortField]: sortOrder };
+    try {
+      const skip = (page - 1) * limit;
+      const sortOptions = { [sortField]: sortOrder };
 
-    const filterRegex = new RegExp(filter, 'i');
-    const filterQuery = filter
-      ? {
-          $or: [
-            { title: filterRegex },
-            { description: filterRegex },
-            { technologies: filterRegex },
-          ],
-        }
-      : {};
+      const filterRegex = new RegExp(filter, 'i');
+      const filterQuery = filter
+        ? {
+            $or: [
+              { title: filterRegex },
+              { description: filterRegex },
+              { technologies: filterRegex },
+            ],
+          }
+        : {};
 
-    const [projects, total] = await Promise.all([
-      this.projectModel
-        .find(filterQuery)
-        .sort(sortOptions)
-        .skip(skip)
-        .limit(limit)
-        .exec(),
-      this.projectModel.countDocuments(filterQuery),
-    ]);
+      const [projects, total] = await Promise.all([
+        this.projectModel
+          .find(filterQuery)
+          .select('title description createdAt technologies') // Limit fields
+          .sort(sortOptions)
+          .skip(skip)
+          .limit(limit)
+          .exec(),
+        this.projectModel.countDocuments(filterQuery),
+      ]);
 
-    return { projects, total };
+      return { projects, total };
+    } catch (error) {
+      console.error('Error fetching projects:', error);
+      throw new Error('Could not fetch projects');
+    }
   }
 
   async findOne(id: string): Promise<Project> {

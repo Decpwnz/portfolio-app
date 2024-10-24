@@ -3,10 +3,10 @@ import { Document } from 'mongoose';
 
 @Schema({ timestamps: true })
 export class ContactSubmission extends Document {
-  @Prop({ required: true })
+  @Prop({ required: true, index: true })
   name: string;
 
-  @Prop({ required: true })
+  @Prop({ required: true, index: true })
   email: string;
 
   @Prop({ required: true })

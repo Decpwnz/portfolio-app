@@ -24,31 +24,37 @@ export class ContactService {
     sortOrder: 'asc' | 'desc' = 'desc',
     filter: string = '',
   ): Promise<{ submissions: ContactSubmission[]; total: number }> {
-    const skip = (page - 1) * limit;
-    const sortOptions = { [sortField]: sortOrder };
+    try {
+      const skip = (page - 1) * limit;
+      const sortOptions = { [sortField]: sortOrder };
 
-    const filterRegex = new RegExp(filter, 'i');
-    const filterQuery = filter
-      ? {
-          $or: [
-            { name: filterRegex },
-            { email: filterRegex },
-            { message: filterRegex },
-          ],
-        }
-      : {};
+      const filterRegex = new RegExp(filter, 'i');
+      const filterQuery = filter
+        ? {
+            $or: [
+              { name: filterRegex },
+              { email: filterRegex },
+              { message: filterRegex },
+            ],
+          }
+        : {};
 
-    const [submissions, total] = await Promise.all([
-      this.contactSubmissionModel
-        .find(filterQuery)
-        .sort(sortOptions)
-        .skip(skip)
-        .limit(limit)
-        .exec(),
-      this.contactSubmissionModel.countDocuments(filterQuery),
-    ]);
+      const [submissions, total] = await Promise.all([
+        this.contactSubmissionModel
+          .find(filterQuery)
+          .select('name email createdAt isRead') // Limit fields
+          .sort(sortOptions)
+          .skip(skip)
+          .limit(limit)
+          .exec(),
+        this.contactSubmissionModel.countDocuments(filterQuery),
+      ]);
 
-    return { submissions, total };
+      return { submissions, total };
+    } catch (error) {
+      console.error('Error fetching contact submissions:', error);
+      throw new Error('Could not fetch contact submissions');
+    }
   }
 
   async markAsRead(id: string): Promise<ContactSubmission> {
