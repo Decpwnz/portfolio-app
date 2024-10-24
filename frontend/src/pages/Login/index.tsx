@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
-import { Link } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 
+import styles from './Login.module.css'
 import { RootState, AppDispatch } from '../../app/store'
 import { login } from '../../features/auth/authSlice'
 
@@ -25,16 +25,17 @@ function Login() {
   }
 
   return (
-    <div>
-      <h2>Login</h2>
-      {error && <p>{error}</p>}
-      <form onSubmit={handleSubmit}>
+    <div className={styles.container}>
+      <h2 className={styles.title}>Login</h2>
+      {error && <p className={styles.error}>{error}</p>}
+      <form onSubmit={handleSubmit} className={styles.form}>
         <input
           type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           placeholder="Username"
           required
+          className={styles.input}
         />
         <input
           type="password"
@@ -42,17 +43,18 @@ function Login() {
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
           required
+          className={styles.input}
         />
-        <button type="submit" disabled={loading}>
+        <button type="submit" disabled={loading} className={styles.button}>
           {loading ? 'Logging in...' : 'Login'}
         </button>
       </form>
-      <button>
-        <Link to="/register">Don't have an account? Register here.</Link>
-      </button>
-      <button>
-        <Link to="/">Back to Home</Link>
-      </button>
+      <Link to="/register" className={styles.link}>
+        Don't have an account? Register here.
+      </Link>
+      <Link to="/" className={styles.link}>
+        Back to Home
+      </Link>
     </div>
   )
 }

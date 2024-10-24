@@ -1,7 +1,6 @@
 .container {
   max-width: 100%;
   min-height: 100vh;
-  background-color: #1a1a1aaa;
   color: white;
   padding: 20px 200px;
   display: flex;

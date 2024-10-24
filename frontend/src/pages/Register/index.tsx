@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 import styles from './Register.module.css'
@@ -34,15 +34,16 @@ function Register() {
 
   return (
     <div className={styles.container}>
+      <h2 className={styles.title}>Register</h2>
+      {error && <p className={styles.error}>{error}</p>}
       <form onSubmit={handleSubmit} className={styles.form}>
-        <h2>Register</h2>
-        {error && <p className={styles.error}>{error}</p>}
         <input
           type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           placeholder="Username"
           required
+          className={styles.input}
         />
         <input
           type="password"
@@ -50,11 +51,18 @@ function Register() {
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
           required
+          className={styles.input}
         />
-        <button type="submit" disabled={loading}>
+        <button type="submit" disabled={loading} className={styles.button}>
           {loading ? 'Registering...' : 'Register'}
         </button>
       </form>
+      <Link to="/login" className={styles.link}>
+        Already have an account? Login here.
+      </Link>
+      <Link to="/" className={styles.link}>
+        Back to Home
+      </Link>
     </div>
   )
 }
