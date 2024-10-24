@@ -2,7 +2,7 @@
   max-width: 100%;
   min-height: 100vh;
   margin: 0 auto;
-  padding: 20px 200px;
+  padding: 20px 5%;
   font-family: 'Montserrat', sans-serif;
   background-color: #1a1a1aaa;
   color: white;
@@ -17,23 +17,54 @@
 
 .header h1 {
   font-size: 2.5em;
+  margin: 0;
 }
 
 .homeLink {
   text-decoration: none;
   color: white;
   font-weight: bold;
-  transition: color 0.3s ease;
+  transition:
+    color 0.3s ease,
+    transform 0.3s ease;
+  padding: 10px 20px;
+  border: 2px solid white;
+  border-radius: 5px;
 }
 
 .homeLink:hover {
   color: chocolate;
+  transform: translateY(-2px);
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.controls select,
+.controls input {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #2a2a2a;
+  color: white;
+  font-size: 1em;
+}
+
+.controls select {
+  cursor: pointer;
+}
+
+.controls input {
+  width: 200px;
 }
 
 .projectsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
+  gap: 30px;
 }
 
 .projectCard {
@@ -42,16 +73,20 @@
   padding: 20px;
   display: flex;
   flex-direction: column;
-  transition: transform 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .projectCard:hover {
   transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
 .projectLinkTitle {
   text-decoration: none;
   color: chocolate;
+  transition: color 0.3s ease;
 }
 
 .projectLinkTitle:hover {
@@ -73,6 +108,7 @@
 
 .projectCard p {
   margin-bottom: 15px;
+  line-height: 1.6;
 }
 
 .technologies {
@@ -87,6 +123,11 @@
   padding: 5px 10px;
   border-radius: 15px;
   font-size: 0.8em;
+  transition: background-color 0.3s ease;
+}
+
+.tech:hover {
+  background-color: #4a4a4a;
 }
 
 .projectLink {
@@ -94,9 +135,59 @@
   color: chocolate;
   font-weight: bold;
   align-self: flex-start;
-  transition: color 0.3s ease;
+  transition:
+    color 0.3s ease,
+    transform 0.3s ease;
+  padding: 5px 10px;
+  border: 1px solid chocolate;
+  border-radius: 5px;
 }
 
 .projectLink:hover {
   color: #ff9966;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 20px 3%;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header h1 {
+    margin-bottom: 20px;
+  }
+
+  .controls {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .controls input {
+    width: 100%;
+  }
+
+  .projectsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Loading skeleton styles */
+.skeleton {
+  background: linear-gradient(90deg, #2a2a2a 25%, #3a3a3a 50%, #2a2a2a 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }

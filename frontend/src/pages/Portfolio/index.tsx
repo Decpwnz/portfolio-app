@@ -43,6 +43,23 @@ function Portfolio() {
     debouncedSetFilterRef.current(event.target.value)
   }
 
+  const renderSkeleton = () => (
+    <div className={styles.projectsGrid}>
+      {[...Array(6)].map((_, index) => (
+        <div key={index} className={`${styles.projectCard} ${styles.skeleton}`}>
+          <div className={styles.projectImage} />
+          <div style={{ height: '24px', marginBottom: '10px' }} />
+          <div style={{ height: '80px', marginBottom: '15px' }} />
+          <div className={styles.technologies}>
+            {[...Array(3)].map((_, i) => (
+              <span key={i} className={styles.tech} style={{ width: '60px', height: '25px' }} />
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+
   if (error) return <div>Error: {error}</div>
 
   return (
@@ -69,7 +86,7 @@ function Portfolio() {
       </div>
       <main className={styles.main}>
         {loading ? (
-          <div>Loading...</div>
+          renderSkeleton()
         ) : projects.length > 0 ? (
           <section className={styles.projectsGrid}>
             {projects.map((project) => (
