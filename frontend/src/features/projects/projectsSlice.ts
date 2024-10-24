@@ -14,7 +14,7 @@ export interface ProjectsState {
   selectedProject: Project | null
 }
 
-const initialState: ProjectsState = {
+export const initialState: ProjectsState = {
   projects: [],
   total: 0,
   currentPage: 1,
@@ -137,10 +137,15 @@ const projectsSlice = createSlice({
         state.projects.push(action.payload)
       })
       .addCase(updateProject.fulfilled, (state, action) => {
-        const index = state.projects.findIndex((p) => p._id === action.payload._id)
+        const updatedProject = action.payload
+        const index = state.projects.findIndex((project) => project._id === updatedProject._id)
         if (index !== -1) {
-          state.projects[index] = action.payload
+          state.projects[index] = updatedProject
+        } else {
+          state.projects.push(updatedProject)
         }
+        state.loading = false
+        state.error = null
       })
       .addCase(deleteProject.fulfilled, (state, action) => {
         state.projects = state.projects.filter((p) => p._id !== action.payload)

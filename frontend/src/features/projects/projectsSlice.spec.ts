@@ -4,10 +4,12 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import projectsReducer, {
   fetchProjects,
   createProject,
+  updateProject,
+  deleteProject,
   setSortField,
   setSortOrder,
   setFilter,
-  ProjectsState,
+  initialState,
 } from './projectsSlice'
 import * as apiModule from '../../services/api'
 
@@ -15,28 +17,32 @@ import * as apiModule from '../../services/api'
 vi.mock('../../services/api')
 
 describe('projectsSlice', () => {
-  let store: ReturnType<typeof configureStore<{ projects: ProjectsState }>>
+  let store: ReturnType<typeof configureStore<{ projects: ReturnType<typeof projectsReducer> }>>
 
   beforeEach(() => {
     store = configureStore({
       reducer: { projects: projectsReducer },
+      preloadedState: {
+        projects: {
+          ...initialState,
+          projects: [
+            {
+              _id: '1',
+              name: 'Initial Project',
+              title: 'Initial Project',
+              description: 'An initial project',
+              technologies: [],
+            },
+          ],
+        },
+      },
     })
     // Reset all mocks before each test
     vi.resetAllMocks()
   })
 
   it('should handle initial state', () => {
-    expect(store.getState().projects).toEqual({
-      projects: [],
-      total: 0,
-      currentPage: 1,
-      loading: false,
-      error: null,
-      sortField: 'createdAt',
-      sortOrder: 'desc',
-      filter: '',
-      selectedProject: null,
-    })
+    expect(projectsReducer(undefined, { type: 'unknown' })).toEqual(initialState)
   })
 
   it('should handle setSortField', () => {
@@ -95,6 +101,46 @@ describe('projectsSlice', () => {
     await store.dispatch(createProject(newProject))
 
     expect(store.getState().projects.projects).toContainEqual(createdProject)
+  })
+
+  it('should handle updateProject.fulfilled', async () => {
+    const updatedProject = {
+      _id: '1',
+      name: 'Updated Project',
+      description: 'Updated description',
+      title: 'Updated Project Title',
+      technologies: ['React'],
+    }
+    vi.spyOn(apiModule.api, 'updateProject').mockResolvedValue(updatedProject)
+
+    await store.dispatch(updateProject({ id: '1', project: updatedProject }))
+
+    expect(store.getState().projects.projects).toContainEqual(updatedProject)
+  })
+
+  it('should handle deleteProject.fulfilled', async () => {
+    const projectId = '1'
+    // Use vi.fn() to mock the deleteProject function
+    vi.spyOn(apiModule.api, 'deleteProject').mockResolvedValue(undefined)
+
+    await store.dispatch(deleteProject(projectId))
+
+    expect(store.getState().projects.projects).not.toContainEqual(
+      expect.objectContaining({ _id: projectId })
+    )
+  })
+
+  it('should handle fetchProjects.rejected', async () => {
+    const errorMessage = 'Failed to fetch projects'
+    // Use vi.fn() to mock the getProjects function
+    vi.spyOn(apiModule.api, 'getProjects').mockRejectedValue(new Error(errorMessage))
+
+    await store.dispatch(
+      fetchProjects({ page: 1, limit: 10, sortField: 'name', sortOrder: 'asc', filter: '' })
+    )
+
+    expect(store.getState().projects.loading).toBe(false)
+    expect(store.getState().projects.error).toBe(errorMessage)
   })
 
   // Add more tests for updateProject, deleteProject, and fetchProjectById...
