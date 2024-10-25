@@ -5,18 +5,17 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ProjectsModule } from './projects/projects.module';
 import { ContactModule } from './contact/contact.module';
-import databaseConfig from './config/database.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [databaseConfig],
       isGlobal: true,
+      envFilePath: `.env.${process.env.NODE_ENV}`,
     }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        uri: configService.get<string>('database.uri'),
+        uri: configService.get<string>('MONGODB_URI'),
       }),
       inject: [ConfigService],
     }),

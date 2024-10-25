@@ -2,16 +2,21 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  // This line sets up global validation for all incoming requests
-  // It uses NestJS's ValidationPipe to automatically validate
-  // DTOs based on their class-validator decorators
+  const configService = app.get(ConfigService);
+
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new HttpExceptionFilter());
-  app.enableCors();
-  await app.listen(process.env.PORT || 3000);
-  console.log(`Server is running on port ${process.env.PORT || 3000}`);
+  app.enableCors({
+    origin: configService.get('FRONTEND_URL'),
+    credentials: true,
+  });
+
+  const port = configService.get('PORT') || 3000;
+  await app.listen(port);
+  console.log(`Server is running on port ${port}`);
 }
 bootstrap();

@@ -34,6 +34,8 @@ export class ProjectsService {
               { title: filterRegex },
               { description: filterRegex },
               { technologies: filterRegex },
+              { imageUrl: filterRegex },
+              { projectUrl: filterRegex },
             ],
           }
         : {};
@@ -41,7 +43,9 @@ export class ProjectsService {
       const [projects, total] = await Promise.all([
         this.projectModel
           .find(filterQuery)
-          .select('title description createdAt technologies') // Limit fields
+          .select(
+            'title description createdAt technologies imageUrl projectUrl',
+          )
           .sort(sortOptions)
           .skip(skip)
           .limit(limit)
