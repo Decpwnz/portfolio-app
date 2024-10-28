@@ -1,0 +1,117 @@
+.container {
+  max-width: 100%;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 20px 5%;
+  font-family: 'Montserrat', sans-serif;
+  background-color: #1a1a1aaa;
+  color: white;
+}
+
+.backLink {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  transition:
+    color 0.3s ease,
+    transform 0.3s ease;
+  padding: 10px 20px;
+  border: 2px solid white;
+  border-radius: 5px;
+  display: inline-block;
+  margin-bottom: 30px;
+}
+
+.backLink:hover {
+  color: chocolate;
+  transform: translateY(-2px);
+}
+
+.projectImage {
+  width: 100%;
+  max-width: 800px;
+  height: auto;
+  object-fit: cover;
+  border-radius: 8px;
+  margin: 20px 0;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+  font-size: 2.5em;
+  margin: 20px 0;
+}
+
+p {
+  font-size: 1.1em;
+  line-height: 1.6;
+  margin-bottom: 30px;
+  max-width: 800px;
+}
+
+.technologies {
+  margin: 30px 0;
+}
+
+.technologies h2 {
+  font-size: 1.8em;
+  margin-bottom: 15px;
+}
+
+.technologies ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.technologies li {
+  background-color: #2a2a2a;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.9em;
+  transition: background-color 0.3s ease;
+}
+
+.technologies li:hover {
+  background-color: #3a3a3a;
+}
+
+.projectLink {
+  display: inline-block;
+  text-decoration: none;
+  color: chocolate;
+  font-weight: bold;
+  padding: 10px 20px;
+  border: 2px solid chocolate;
+  border-radius: 5px;
+  transition:
+    color 0.3s ease,
+    background-color 0.3s ease,
+    transform 0.3s ease;
+}
+
+.projectLink:hover {
+  color: white;
+  background-color: chocolate;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 20px 3%;
+  }
+
+  h1 {
+    font-size: 2em;
+  }
+
+  .technologies ul {
+    flex-direction: column;
+  }
+
+  .technologies li {
+    text-align: center;
+  }
+}
