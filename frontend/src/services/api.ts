@@ -1,10 +1,13 @@
 import axios, { AxiosError } from 'axios'
 import LRUCache from 'lru-cache'
 import { toast } from 'react-toastify'
-const API_URL = 'http://localhost:3000'
+
+const BASE_URL = import.meta.env.PROD
+  ? 'https://heroku-portfolio-app-f5d76b2cb8a5.herokuapp.com'
+  : 'http://localhost:3000'
 
 const axiosInstance = axios.create({
-  baseURL: API_URL,
+  baseURL: BASE_URL,
 })
 
 axiosInstance.interceptors.request.use((config) => {
