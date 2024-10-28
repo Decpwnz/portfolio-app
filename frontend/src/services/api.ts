@@ -1,5 +1,4 @@
 import axios, { AxiosError } from 'axios'
-import LRUCache from 'lru-cache'
 import { toast } from 'react-toastify'
 
 const BASE_URL = import.meta.env.PROD
@@ -62,10 +61,8 @@ export interface ContactSubmission {
   isRead: boolean
 }
 
-const projectsCache = new LRUCache<string, { projects: Project[]; total: number }>({ max: 100 })
-const submissionsCache = new LRUCache<string, { submissions: ContactSubmission[]; total: number }>({
-  max: 100,
-})
+const projectsCache = new Map<string, { projects: Project[]; total: number }>()
+const submissionsCache = new Map<string, { submissions: ContactSubmission[]; total: number }>()
 
 export const api = {
   login: async (username: string, password: string): Promise<{ token: string; user: User }> => {
