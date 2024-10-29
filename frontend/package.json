@@ -2,7 +2,7 @@
   "name": "portfolio",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://github.com/Decpwnz/portfolio-app",
+  "homepage": "https://decpwnz.github.io/portfolio-app",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -11,6 +11,7 @@
     "preview": "vite preview",
     "test": "vitest",
     "test:watch": "vitest --watch",
+    "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
@@ -30,6 +31,7 @@
     "@testing-library/user-event": "^14.5.2",
     "@types/lodash": "^4.17.12",
     "@types/lru-cache": "^7.10.10",
+    "@types/node": "^22.8.2",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "@typescript-eslint/eslint-plugin": "^7.2.0",

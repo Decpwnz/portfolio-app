@@ -1,9 +1,7 @@
 import axios, { AxiosError } from 'axios'
 import { toast } from 'react-toastify'
 
-const BASE_URL = import.meta.env.PROD
-  ? 'https://heroku-portfolio-app-f5d76b2cb8a5.herokuapp.com'
-  : 'http://localhost:3000'
+const BASE_URL = import.meta.env.VITE_API_URL
 
 const axiosInstance = axios.create({
   baseURL: BASE_URL,

@@ -22,38 +22,43 @@ import Register from './pages/Register/index.tsx'
 
 import './index.css'
 
-const router = createBrowserRouter([
+const router = createBrowserRouter(
+  [
+    {
+      path: '/',
+      element: <App />,
+      errorElement: <NotFound />,
+      children: [
+        { path: '', element: <Home /> },
+        { path: 'about', element: <About /> },
+        { path: 'contacts', element: <Contacts /> },
+        { path: 'portfolio', element: <Portfolio /> },
+        { path: 'portfolio/:id', element: <ProjectDetail /> },
+        {
+          path: 'admin',
+          element: (
+            <PrivateRoute>
+              <AdminRoute />
+            </PrivateRoute>
+          ),
+        },
+        { path: 'login', element: <Login /> },
+        { path: 'register', element: <Register /> },
+        {
+          path: 'profile',
+          element: (
+            <PrivateRoute>
+              <Profile />
+            </PrivateRoute>
+          ),
+        },
+      ],
+    },
+  ],
   {
-    path: '/',
-    element: <App />,
-    errorElement: <NotFound />,
-    children: [
-      { path: '/', element: <Home /> },
-      { path: 'about', element: <About /> },
-      { path: 'contacts', element: <Contacts /> },
-      { path: 'portfolio', element: <Portfolio /> },
-      { path: 'portfolio/:id', element: <ProjectDetail /> },
-      {
-        path: 'admin',
-        element: (
-          <PrivateRoute>
-            <AdminRoute />
-          </PrivateRoute>
-        ),
-      },
-      { path: 'login', element: <Login /> },
-      { path: 'register', element: <Register /> },
-      {
-        path: 'profile',
-        element: (
-          <PrivateRoute>
-            <Profile />
-          </PrivateRoute>
-        ),
-      },
-    ],
-  },
-])
+    basename: import.meta.env.PROD ? '/portfolio-app' : '/',
+  }
+)
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
