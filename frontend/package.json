@@ -2,7 +2,7 @@
   "name": "portfolio",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://decpwnz.github.io/portfolio-app",
+  "homepage": "https://decpwnz.github.io/portfolio-app/",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -11,8 +11,8 @@
     "preview": "vite preview",
     "test": "vitest",
     "test:watch": "vitest --watch",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "predeploy": "rm -rf dist && npm run build",
+    "deploy": "gh-pages -d dist -b gh-pages -m 'Deploy React app to GitHub Pages'"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.3.0",

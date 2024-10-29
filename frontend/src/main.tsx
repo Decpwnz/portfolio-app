@@ -56,7 +56,7 @@ const router = createBrowserRouter(
     },
   ],
   {
-    basename: import.meta.env.PROD ? '/portfolio-app' : '/',
+    basename: process.env.NODE_ENV === 'production' ? '/portfolio-app/' : '/',
   }
 )
 
