@@ -13,7 +13,7 @@ import {
   setSortOrder,
   setFilter,
 } from '../../features/projects/projectsSlice'
-
+// random comment
 function Portfolio() {
   const dispatch = useAppDispatch()
   const { projects, total, currentPage, loading, error, sortField, sortOrder, filter } =
