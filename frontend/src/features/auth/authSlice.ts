@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
 import { api, User } from '../../services/api'
 
-interface AuthState {
+export interface AuthState {
   user: User | null
   token: string | null
   isAuthenticated: boolean
@@ -10,7 +10,7 @@ interface AuthState {
   error: string | null
 }
 
-const initialState: AuthState = {
+export const initialState: AuthState = {
   user: null,
   token: localStorage.getItem('token'),
   isAuthenticated: false,
