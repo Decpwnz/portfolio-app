@@ -4,6 +4,7 @@ import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
 import { describe, it, expect, vi } from 'vitest'
 
+import styles from './Admin.module.css'
 import Admin from './index'
 import contactSubmissionsReducer from '../../features/contactSubmissions/contactSubmissionsSlice'
 import projectsReducer from '../../features/projects/projectsSlice'
@@ -45,13 +46,13 @@ describe('Admin Component', () => {
 
   it('renders the Admin dashboard', async () => {
     renderAdminComponent()
-    await waitForElementToBeRemoved(() => screen.getByText('Loading...'))
+    await waitForElementToBeRemoved(() => document.querySelector('.' + styles.skeleton))
     expect(screen.getByText('Admin Dashboard')).toBeInTheDocument()
   })
 
   it('renders the project form', async () => {
     renderAdminComponent()
-    await waitForElementToBeRemoved(() => screen.getByText('Loading...'))
+    await waitForElementToBeRemoved(() => document.querySelector('.' + styles.skeleton))
     expect(screen.getByText('Add New Project')).toBeInTheDocument()
     expect(screen.getByPlaceholderText('Title')).toBeInTheDocument()
     expect(screen.getByPlaceholderText('Description')).toBeInTheDocument()
@@ -60,13 +61,13 @@ describe('Admin Component', () => {
 
   it('renders the projects list', async () => {
     renderAdminComponent()
-    await waitForElementToBeRemoved(() => screen.getByText('Loading...'))
+    await waitForElementToBeRemoved(() => document.querySelector('.' + styles.skeleton))
     expect(screen.getByText('Projects')).toBeInTheDocument()
   })
 
   it('renders the contact submissions list', async () => {
     renderAdminComponent()
-    await waitForElementToBeRemoved(() => screen.getByText('Loading...'))
+    await waitForElementToBeRemoved(() => document.querySelector('.' + styles.skeleton))
     expect(screen.getByText('Contact Submissions')).toBeInTheDocument()
   })
 
